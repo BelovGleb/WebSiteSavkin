@@ -19,11 +19,10 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       background-position: center;
-      color: #FFFAF0;
+      color: #E6FFE6;
       font-family: Arial, sans-serif;
       margin: 0;
       line-height: 1.6;
-      transition: background-color 0.5s ease, color 0.5s ease;
     }
 
     body::before {
@@ -31,18 +30,8 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.45);
+      background-color: rgba(0, 40, 0, 0.6);
       z-index: -1;
-    }
-
-    body.light-theme {
-      background-color: #f4f4f4;
-      color: #222;
-      background-image: url("background-light.jpg");
-    }
-
-    body.light-theme::before {
-      background-color: rgba(255, 255, 255, 0.8);
     }
 
     /* Меню */
@@ -50,153 +39,162 @@
       text-align: center;
       margin: 40px 0 30px;
       font-weight: bold;
-      animation: fadeIn 1s ease;
     }
 
     .menu a {
       display: inline-block;
-      background-color: rgba(255, 215, 0, 0.15);
-      color: #FFD700;
+      background-color: rgba(0, 255, 100, 0.15);
+      color: #00FF7F;
       text-decoration: none;
       padding: 10px 18px;
-      border: 1px solid #FFD700;
+      border: 1px solid #00FF7F;
       border-radius: 25px;
       margin: 4px;
       transition: all 0.3s ease;
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 8px rgba(0, 255, 100, 0.25);
     }
 
     .menu a:hover {
-      background-color: #FFD700;
-      color: #000;
-      box-shadow: 0 0 15px #FFD700;
+      background-color: #00FF7F;
+      color: #003300;
+      box-shadow: 0 0 15px #00FF7F;
       transform: translateY(-2px);
       text-decoration: none;
     }
 
-    h1 {
-      text-align: center;
-      color: #FFD700;
-      text-shadow: 0 0 10px #FFD700, 2px 2px 4px #000;
-      margin-bottom: 20px;
-      animation: glow 2s ease-in-out infinite alternate;
+    .menu a.active {
+      background-color: #00FF7F;
+      color: #003300;
+      box-shadow: 0 0 15px #00FF7F;
+      cursor: default;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 8px #FFD700, 2px 2px 4px #000; }
-      to { text-shadow: 0 0 20px #FFA500, 2px 2px 6px #000; }
+    h1 {
+      text-align: center;
+      color: #00FF7F;
+      text-shadow: 0 0 12px #00FF7F, 2px 2px 4px #000;
+      margin-bottom: 20px;
     }
 
     .content {
       flex: 1;
       max-width: 900px;
-      margin: 0 auto 40px;
-      background-color: rgba(0, 0, 0, 0.6);
+      margin: 0 auto 60px;
+      background-color: rgba(0, 50, 0, 0.6);
       padding: 35px;
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
       animation: fadeInUp 1s ease;
     }
 
-.product-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Увеличена минимальная ширина карточек */
-  gap: 25px;
-  margin-top: 25px;
-}
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.product {
-  display: flex;
-  flex-direction: column; /* Устанавливаем вертикальное расположение элементов */
-  background-color: rgba(255, 215, 0, 0.1);
-  border: 1px solid #FFD700;
-  border-radius: 15px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);
-  transition: all 0.3s ease;
-  height: 100%;
-  justify-content: space-between;
-  min-height: 380px; /* Увеличиваем минимальную высоту карточки */
-  max-height: 450px; /* Устанавливаем максимальную высоту карточки */
-}
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 25px;
+    }
 
-.product:hover {
-  background-color: rgba(255, 215, 0, 0.25);
-  box-shadow: 0 0 18px rgba(255, 215, 0, 0.4);
-  transform: translateY(-5px);
-}
+    .product {
+      display: flex;
+      flex-direction: column;
+      background-color: rgba(0, 255, 100, 0.10);
+      border: 1px solid #00FF7F;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 255, 100, 0.18);
+      transition: all 0.3s ease;
+      height: 100%;
+      justify-content: space-between;
+      min-height: 380px;
+      max-height: 450px;
+    }
 
-.product img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  max-height: 180px; /* Ограничиваем высоту изображения, чтобы оно не вытягивало карточку */
-  object-fit: contain; /* Чтобы изображение не искажалось */
-}
+    .product:hover {
+      background-color: rgba(0, 255, 100, 0.18);
+      box-shadow: 0 0 18px rgba(0, 255, 100, 0.35);
+      transform: translateY(-5px);
+    }
 
-.product h3 {
-  color: #FFD700;
-  margin-bottom: 12px;
-  font-size: 1.25rem; /* Увеличим размер шрифта заголовка */
-  font-weight: bold;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-}
+    .product img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      max-height: 180px;
+      object-fit: contain;
+    }
 
-.product p {
-  font-size: 14px; /* Уменьшаем размер шрифта для описания */
-  color: #FFF8DC;
-  line-height: 1.5;
-  text-align: center;
-  margin-bottom: 10px;
-}
+    .product h3 {
+      color: #00FF7F;
+      margin-bottom: 12px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    }
 
-.product-info {
-  display: flex;
-  justify-content: space-between; /* Расставляем цену и кнопку по сторонам */
-  align-items: center; /* Выравниваем по центру по вертикали */
-  margin-top: 10px; /* Уменьшаем отступ сверху для блока с ценой и кнопкой */
-}
+    .product p {
+      font-size: 14px;
+      color: #E6FFE6;
+      line-height: 1.5;
+      text-align: center;
+      margin-bottom: 10px;
+    }
 
-.price {
-  font-size: 1.1rem; /* Увеличиваем размер шрифта для цены */
-  color: #FFD700;
-  font-weight: bold;
-}
+    .product-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      gap: 10px;
+    }
 
-.buy-btn {
-  display: inline-block;
-  margin-top: 5px; /* Уменьшаем верхний отступ для кнопки */
-  padding: 10px 20px;
-  border-radius: 25px;
-  border: 1px solid #FFD700;
-  background-color: rgba(255, 215, 0, 0.25);
-  color: #FFD700;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 1rem;
-  letter-spacing: 1px; /* Пространство между буквами */
-  transition: all 0.3s ease;
-  text-align: center;
-}
+    .price {
+      font-size: 1.1rem;
+      color: #00FF7F;
+      font-weight: bold;
+      margin: 0;
+    }
 
-.buy-btn:hover {
-  background-color: #FFD700;
-  color: #000;
-  box-shadow: 0 0 12px #FFD700;
-  transform: translateY(-2px);
-}
+    .buy-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: 1px solid #00FF7F;
+      background-color: rgba(0, 255, 100, 0.18);
+      color: #00FF7F;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
 
-hr {
-  border: none;
-  height: 1px;
-  background-color: #FFD700;
-  width: 60%;
-  margin: 30px auto;
-}
+    .buy-btn:hover {
+      background-color: #00FF7F;
+      color: #003300;
+      box-shadow: 0 0 12px #00FF7F;
+      transform: translateY(-2px);
+    }
 
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #00FF7F;
+      width: 60%;
+      margin: 30px auto;
+    }
 
- z
+    a { color: #7CFFB2; }
+    a:hover { color: #00FF7F; }
+  </style>
+</head>
 
 <body>
 
@@ -214,156 +212,80 @@ hr {
   <div class="content">
     <h1>Заказать продукцию The Beatles</h1>
     <p>
-      На нашем сайте вы можете приобрести уникальные товары с символикой <strong>The Beatles</strong> — 
-      легендарной группы, навсегда изменившей историю музыки. Вся продукция официально лицензирована 
+      На нашем сайте вы можете приобрести уникальные товары с символикой <strong>The Beatles</strong> —
+      легендарной группы, навсегда изменившей историю музыки. Вся продукция официально лицензирована
       и станет прекрасным подарком для фанатов или стильным элементом коллекции.
     </p>
     <hr>
 
-<div class="product-list">
-  <div class="product">
-    <img src="mini269.webp" alt="Сумочка на плечо The Beatles">
-    <h3>Сумочка на плечо “The Beatles”</h3>
-    <p>Элегантная сумочка на плечо с логотипом The Beatles. Идеально подходит для прогулок по городу или вечерних выходов.</p>
-    <div class="product-info">
-      <p class="price">Цена: 1500₽</p>
-      <a href="#" class="buy-btn">Купить</a>
+    <div class="product-list">
+      <div class="product">
+        <img src="mini269.webp" alt="Сумочка на плечо The Beatles">
+        <h3>Сумочка на плечо “The Beatles”</h3>
+        <p>Элегантная сумочка на плечо с логотипом The Beatles. Идеально подходит для прогулок по городу или вечерних выходов.</p>
+        <div class="product-info">
+          <p class="price">1500₽</p>
+          <a href="#" class="buy-btn">Купить</a>
+        </div>
+      </div>
+
+      <div class="product">
+        <img src="shoper69.jpg" alt="Шоппер The Beatles">
+        <h3>Шоппер “The Beatles”</h3>
+        <p>Стильный и вместительный шоппер с принтом знаменитого логотипа The Beatles. Отличный выбор для покупок и повседневного использования.</p>
+        <div class="product-info">
+          <p class="price">1200₽</p>
+          <a href="#" class="buy-btn">Купить</a>
+        </div>
+      </div>
+
+      <div class="product">
+        <img src="wbag69.jpg" alt="Женский рюкзак The Beatles">
+        <h3>Женский рюкзак “The Beatles”</h3>
+        <p>Модный рюкзак для женщин с изображением The Beatles. Практичный и стильный аксессуар для всех фанатов группы.</p>
+        <div class="product-info">
+          <p class="price">2200₽</p>
+          <a href="#" class="buy-btn">Купить</a>
+        </div>
+      </div>
+
+      <div class="product">
+        <img src="magnit69.jpeg" alt="Набор магнитиков The Beatles">
+        <h3>Набор магнитиков “The Beatles”</h3>
+        <p>Коллекционный набор магнитиков с культовыми изображениями The Beatles. Прекрасный подарок для поклонников группы.</p>
+        <div class="product-info">
+          <p class="price">500₽</p>
+          <a href="#" class="buy-btn">Купить</a>
+        </div>
+      </div>
+
+      <div class="product">
+        <img src="hoodie69.jpeg" alt="Худи унисекс черная The Beatles">
+        <h3>Худи унисекс черная “The Beatles”</h3>
+        <p>Удобное и стильное худи черного цвета с принтом группы The Beatles. Идеально для прохладных дней и вечерних прогулок.</p>
+        <div class="product-info">
+          <p class="price">2800₽</p>
+          <a href="#" class="buy-btn">Купить</a>
+        </div>
+      </div>
+
+      <div class="product">
+        <img src="bt69.jpeg" alt="Футболка унисекс черная The Beatles">
+        <h3>Футболка унисекс черная “The Beatles”</h3>
+        <p>Классическая черная футболка с логотипом The Beatles. Отличный выбор для фанатов группы.</p>
+        <div class="product-info">
+          <p class="price">800₽</p>
+          <a href="#" class="buy-btn">Купить</a>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="product">
-    <img src="shoper69.jpg" alt="Шоппер The Beatles">
-    <h3>Шоппер “The Beatles”</h3>
-    <p>Стильный и вместительный шоппер с принтом знаменитого логотипа The Beatles. Отличный выбор для покупок и повседневного использования.</p>
-    <div class="product-info">
-      <p class="price">Цена: 1200₽</p>
-      <a href="#" class="buy-btn">Купить</a>
-    </div>
-  </div>
-
-  <div class="product">
-    <img src="wbag69.jpg" alt="Женский рюкзак The Beatles">
-    <h3>Женский рюкзак “The Beatles”</h3>
-    <p>Модный рюкзак для женщин с изображением The Beatles. Практичный и стильный аксессуар для всех фанатов группы.</p>
-    <div class="product-info">
-      <p class="price">Цена: 2200₽</p>
-      <a href="#" class="buy-btn">Купить</a>
-    </div>
-  </div>
-
-  <div class="product">
-    <img src="magnit69.jpeg" alt="Набор магнитиков The Beatles">
-    <h3>Набор магнитиков “The Beatles”</h3>
-    <p>Коллекционный набор магнитиков с культовыми изображениями The Beatles. Прекрасный подарок для поклонников группы.</p>
-    <div class="product-info">
-      <p class="price">Цена: 500₽</p>
-      <a href="#" class="buy-btn">Купить</a>
-    </div>
-  </div>
-
-  <div class="product">
-    <img src="hoodie69.jpeg" alt="Худи унисекс черная The Beatles">
-    <h3>Худи унисекс черная “The Beatles”</h3>
-    <p>Удобное и стильное худи черного цвета с принтом группы The Beatles. Идеально для прохладных дней и вечерних прогулок.</p>
-    <div class="product-info">
-      <p class="price">Цена: 2800₽</p>
-      <a href="#" class="buy-btn">Купить</a>
-    </div>
-  </div>
-
-  <div class="product">
-    <img src="bt69.jpeg" alt="Футболка унисекс черная The Beatles">
-    <h3>Футболка унисекс черная “The Beatles”</h3>
-    <p>Классическая черная футболка с логотипом The Beatles. Отличный выбор для фанатов группы.</p>
-    <div class="product-info">
-      <p class="price">Цена: 800₽</p>
-      <a href="#" class="buy-btn">Купить</a>
-    </div>
-  </div>
-</div>
-
-
 
     <hr>
     <p style="text-align:center;">
-      💿 Также вы можете оформить предзаказ на <strong>лимитированные издания</strong>, редкие 
+      💿 Также вы можете оформить предзаказ на <strong>лимитированные издания</strong>, редкие
       записи, постеры и памятные коллекционные предметы, посвящённые великой четвёрке.
     </p>
   </div>
 
-  <!-- Нижняя панель -->
-  <footer class="footer">
-    <div class="footer-left">
-      <div class="logo">
-        <img src="CroissNoir.png" alt="CroissNoir Logo">
-        <span>CroissNoir</span>
-      </div>
-    </div>
-
-    <div class="footer-center">
-      <p>© 2025 | Учебный проект — The Beatles</p>
-      <p>Создано в рамках курса по веб-дизайну</p>
-    </div>
-
-    <div class="footer-right">
-      <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌙</button>
-      <button class="contact-btn" id="contactBtn">Контакты создателей</button>
-    </div>
-  </footer>
-
-  <!-- Модальное окно контактов -->
-  <div id="contactModal" class="contact-modal">
-    <div class="contact-content">
-      <span class="close-contact">&times;</span>
-      <h2>Контакты создателей</h2>
-      <p>Руководитель проекта: <b>Белов Глеб</b></p>
-      <p>Дизайн и разработка: <b>Команда CroissNoir</b></p>
-      <p>Email: <a href="mailto:croissnoir@gmail.com">croissnoir@gmail.com</a></p>
-    </div>
-  </div>
-
-  <script>
-    // Переключение темы
-    const themeToggle = document.getElementById("themeToggle");
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("light-theme");
-      themeToggle.textContent = document.body.classList.contains("light-theme") ? "☀️" : "🌙";
-    });
-
-    // Контактное окно
-    const contactBtn = document.getElementById("contactBtn");
-    const contactModal = document.getElementById("contactModal");
-    const closeContact = document.querySelector(".close-contact");
-
-    contactBtn.onclick = () => contactModal.style.display = "block";
-    closeContact.onclick = () => contactModal.style.display = "none";
-    window.onclick = (e) => { if (e.target === contactModal) contactModal.style.display = "none"; };
-	
-  </script>
-      // Открытие модального окна при клике на изображение
-    const images = document.querySelectorAll('.product-img'); // Все изображения продуктов
-    const modal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
-    const closeModal = document.getElementById('closeModal');
-
-    images.forEach(img => {
-      img.addEventListener('click', (e) => {
-        modal.style.display = 'flex'; // Показываем модальное окно
-        modalImage.src = e.target.src; // Устанавливаем src изображения в модальном окне
-      });
-    });
-
-    // Закрытие модального окна
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none'; // Скрываем модальное окно
-    });
-
-    // Закрытие модального окна при клике за пределами изображения
-    window.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none'; // Закрытие окна при клике вне изображения
-      }
-    });
-  </script>
 </body>
 </html>
