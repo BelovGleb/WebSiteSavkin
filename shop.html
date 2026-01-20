@@ -1,291 +1,1027 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Заказать — The Beatles</title>
 
   <style>
-    html {
-      scroll-behavior: smooth;
-      height: 100%;
+    :root{
+      --bg: #070A10;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent: #FFD166;
+      --accent2:#06D6A0;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1100px;
     }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background-image: url("background.jpg");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      color: #E6FFE6;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      line-height: 1.6;
+    *{ box-sizing: border-box; }
+    html{ scroll-behavior:smooth; height:100%; }
+
+    body{
+      min-height:100vh;
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.75;
+      background:
+        radial-gradient(900px 400px at 15% 10%, rgba(255,209,102,.14), transparent 60%),
+        radial-gradient(800px 420px at 85% 25%, rgba(6,214,160,.12), transparent 60%),
+        radial-gradient(900px 500px at 50% 100%, rgba(255,255,255,.06), transparent 60%),
+        linear-gradient(180deg, #05070C, #070A10);
+      overflow-x:hidden;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 40, 0, 0.6);
-      z-index: -1;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(7,10,16,.62), rgba(7,10,16,.90)),
+        url("background.jpg") center/cover no-repeat fixed;
+      z-index:-2;
     }
 
-    /* Меню */
-    .menu {
-      text-align: center;
-      margin: 40px 0 30px;
-      font-weight: bold;
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.20;
+      z-index:-1;
+      pointer-events:none;
     }
 
-    .menu a {
-      display: inline-block;
-      background-color: rgba(0, 255, 100, 0.15);
-      color: #00FF7F;
-      text-decoration: none;
-      padding: 10px 18px;
-      border: 1px solid #00FF7F;
-      border-radius: 25px;
-      margin: 4px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 8px rgba(0, 255, 100, 0.25);
+    /* ====== TOPBAR ====== */
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(7,10,16,.55);
+      border-bottom: 1px solid var(--stroke);
     }
 
-    .menu a:hover {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
-      transform: translateY(-2px);
-      text-decoration: none;
-    }
-
-    .menu a.active {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
-      cursor: default;
-    }
-
-    h1 {
-      text-align: center;
-      color: #00FF7F;
-      text-shadow: 0 0 12px #00FF7F, 2px 2px 4px #000;
-      margin-bottom: 20px;
-    }
-
-    .content {
-      flex: 1;
-      max-width: 900px;
-      margin: 0 auto 60px;
-      background-color: rgba(0, 50, 0, 0.6);
-      padding: 35px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
-      animation: fadeInUp 1s ease;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .product-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      margin-top: 25px;
-    }
-
-    .product {
-      display: flex;
-      flex-direction: column;
-      background-color: rgba(0, 255, 100, 0.10);
-      border: 1px solid #00FF7F;
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0, 255, 100, 0.18);
-      transition: all 0.3s ease;
-      height: 100%;
+    .topbar-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display:flex;
+      gap:14px;
+      align-items:center;
       justify-content: space-between;
-      min-height: 380px;
-      max-height: 450px;
     }
 
-    .product:hover {
-      background-color: rgba(0, 255, 100, 0.18);
-      box-shadow: 0 0 18px rgba(0, 255, 100, 0.35);
-      transform: translateY(-5px);
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 190px;
     }
 
-    .product img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      max-height: 180px;
-      object-fit: contain;
+    .logo{
+      width:38px; height:38px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,209,102,.95), rgba(255,209,102,.2) 55%, transparent 60%),
+        linear-gradient(135deg, rgba(6,214,160,.9), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
 
-    .product h3 {
-      color: #00FF7F;
-      margin-bottom: 12px;
-      font-size: 1.25rem;
-      font-weight: bold;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    .brand-title{ display:flex; flex-direction:column; line-height:1.1; }
+    .brand-title strong{ font-size: 14px; letter-spacing:.4px; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
+
+    nav.menu{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content:flex-end;
     }
 
-    .product p {
+    .menu a{
+      text-decoration:none;
+      color: var(--muted);
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .2s ease;
       font-size: 14px;
-      color: #E6FFE6;
-      line-height: 1.5;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .product-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-      gap: 10px;
-    }
-
-    .price {
-      font-size: 1.1rem;
-      color: #00FF7F;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    .buy-btn {
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 25px;
-      border: 1px solid #00FF7F;
-      background-color: rgba(0, 255, 100, 0.18);
-      color: #00FF7F;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1rem;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-      text-align: center;
       white-space: nowrap;
     }
 
-    .buy-btn:hover {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 12px #00FF7F;
-      transform: translateY(-2px);
+    .menu a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      transform: translateY(-1px);
     }
 
-    hr {
-      border: none;
-      height: 1px;
-      background-color: #00FF7F;
-      width: 60%;
-      margin: 30px auto;
+    .menu a.active{
+      color: #101318;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border-color: rgba(255,209,102,.35);
+      box-shadow: 0 12px 30px rgba(255,209,102,.18);
+      cursor: default;
     }
 
-    a { color: #7CFFB2; }
-    a:hover { color: #00FF7F; }
+    /* ====== PAGE ====== */
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 26px 18px 70px;
+    }
+
+    .page-title{
+      margin-top: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      padding: 22px 22px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .page-title::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(560px 240px at 18% 10%, rgba(6,214,160,.14), transparent 60%);
+      pointer-events:none;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(26px, 2.6vw, 40px);
+      letter-spacing: .2px;
+    }
+
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 90ch;
+      font-size: 15.5px;
+    }
+
+    .layout{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 14px;
+      align-items:start;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+
+    /* ====== Controls ====== */
+    .controls{
+      display:grid;
+      grid-template-columns: 1fr 220px 160px;
+      gap: 10px;
+      align-items:center;
+    }
+
+    .input, .select, .btn{
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: .2s ease;
+    }
+
+    .input::placeholder{ color: rgba(255,255,255,.45); }
+
+    .input:focus, .select:focus{
+      border-color: rgba(6,214,160,.35);
+      box-shadow: 0 0 0 4px rgba(6,214,160,.10);
+    }
+
+    .btn{
+      cursor:pointer;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent2), #8CF2D7);
+      border-color: rgba(6,214,160,.30);
+      color:#071014;
+    }
+    .btn:hover{ filter: brightness(1.02); transform: translateY(-1px); }
+
+    .btn.ghost{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+      box-shadow: none;
+    }
+
+    .meta{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13.5px;
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tag{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.80);
+      font-size: 12.5px;
+    }
+
+    .dot{
+      width:8px; height:8px; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      box-shadow: 0 10px 20px rgba(255,209,102,.16);
+    }
+
+    /* ====== Products grid ====== */
+    .grid{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .product{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+      display:flex;
+      flex-direction: column;
+      min-height: 390px;
+    }
+
+    .thumb{
+      height: 170px;
+      background: rgba(0,0,0,.22);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+
+    .thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+      filter: contrast(1.05) saturate(1.05);
+      transition: transform .35s ease;
+    }
+
+    .product:hover .thumb img{ transform: scale(1.06); }
+
+    .p-body{
+      padding: 12px 12px 14px;
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+      flex:1;
+    }
+
+    .pill{
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 900;
+      color:#071014;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border: 1px solid rgba(255,209,102,.35);
+      white-space: nowrap;
+    }
+
+    .p-title{
+      margin: 0;
+      font-size: 15.5px;
+      letter-spacing:.2px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .p-desc{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.55;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+      min-height: 64px;
+    }
+
+    .p-row{
+      margin-top: auto;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 8px;
+    }
+
+    .price{
+      font-weight: 900;
+      color: rgba(255,255,255,.92);
+      font-size: 15px;
+    }
+
+    .buy{
+      border-radius: 999px;
+      border: 1px solid rgba(6,214,160,.30);
+      background: rgba(6,214,160,.14);
+      color: rgba(255,255,255,.92);
+      padding: 10px 12px;
+      cursor:pointer;
+      font-weight: 900;
+      transition: .2s ease;
+      white-space: nowrap;
+    }
+    .buy:hover{
+      background: linear-gradient(90deg, var(--accent2), #8CF2D7);
+      color:#071014;
+      transform: translateY(-1px);
+    }
+
+    /* ====== Cart ====== */
+    .cartBox{
+      position: sticky;
+      top: 86px;
+    }
+
+    .cartTop{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .cartBadge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.80);
+      font-size: 12.5px;
+    }
+
+    .cartList{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .cartItem{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 10px;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+
+    .ciThumb{
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      flex:0 0 auto;
+    }
+
+    .ciThumb img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .ciMain{
+      min-width:0;
+      flex:1;
+      display:flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .ciMain strong{
+      font-size: 13.5px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ciMain span{
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .qty{
+      display:flex;
+      align-items:center;
+      gap: 6px;
+      flex:0 0 auto;
+    }
+
+    .qbtn{
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 900;
+      cursor:pointer;
+      transition: .2s ease;
+    }
+    .qbtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+
+    .qval{
+      min-width: 18px;
+      text-align:center;
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(255,255,255,.85);
+    }
+
+    .sum{
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sumRow{
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    .sumRow strong{
+      color: rgba(255,255,255,.92);
+      font-size: 15px;
+    }
+
+    .checkout{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ====== Modal ====== */
+    .modal{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.82);
+      z-index: 1000;
+      padding: 18px;
+    }
+    .modal.open{ display:flex; }
+
+    .modal-box{
+      width: min(860px, 96vw);
+      background: rgba(15,18,26,.88);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 20px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.65);
+      overflow:hidden;
+      backdrop-filter: blur(14px);
+    }
+
+    .modal-head{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.85);
+      font-size: 13.5px;
+    }
+
+    .close{
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.9);
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 900;
+      transition: .2s ease;
+    }
+    .close:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+
+    .modal-body{
+      padding: 16px;
+      color: rgba(255,255,255,.9);
+    }
+
+    .form{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .label{
+      font-size: 12.5px;
+      color: rgba(255,255,255,.72);
+    }
+
+    .textarea{
+      grid-column: 1 / -1;
+    }
+
+    .help{
+      margin-top: 10px;
+      color: rgba(255,255,255,.65);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    footer.site-footer{
+      margin-top: 18px;
+      padding: 18px;
+      color: rgba(255,255,255,.55);
+      text-align:center;
+      font-size: 12.5px;
+    }
+
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      .controls{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .brand{ min-width: auto; }
+      nav.menu{ justify-content: center; }
+      .topbar-inner{ flex-direction: column; align-items: stretch; }
+      .cartBox{ position: static; }
+      .form{ grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="menu">
-    <a href="index.html">Главная</a>
-    <a href="info.html">Общая информация</a>
-    <a href="history.html">История</a>
-    <a href="film.html">Фильмография</a>
-    <a href="disc.html">Дискография</a>
-    <a href="link.html">Источники</a>
-    <a href="shop.html" class="active">Заказать</a>
-    <a href="contact.html">Контакты</a>
-  </div>
-
-  <div class="content">
-    <h1>Заказать продукцию The Beatles</h1>
-    <p>
-      На нашем сайте вы можете приобрести уникальные товары с символикой <strong>The Beatles</strong> —
-      легендарной группы, навсегда изменившей историю музыки. Вся продукция официально лицензирована
-      и станет прекрасным подарком для фанатов или стильным элементом коллекции.
-    </p>
-    <hr>
-
-    <div class="product-list">
-      <div class="product">
-        <img src="mini269.webp" alt="Сумочка на плечо The Beatles">
-        <h3>Сумочка на плечо “The Beatles”</h3>
-        <p>Элегантная сумочка на плечо с логотипом The Beatles. Идеально подходит для прогулок по городу или вечерних выходов.</p>
-        <div class="product-info">
-          <p class="price">1500₽</p>
-          <a href="#" class="buy-btn">Купить</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-title">
+          <strong>The Beatles</strong>
+          <span>Мерч и сувениры</span>
         </div>
       </div>
 
-      <div class="product">
-        <img src="shoper69.jpg" alt="Шоппер The Beatles">
-        <h3>Шоппер “The Beatles”</h3>
-        <p>Стильный и вместительный шоппер с принтом знаменитого логотипа The Beatles. Отличный выбор для покупок и повседневного использования.</p>
-        <div class="product-info">
-          <p class="price">1200₽</p>
-          <a href="#" class="buy-btn">Купить</a>
-        </div>
-      </div>
+      <nav class="menu" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="info.html">Общая информация</a>
+        <a href="history.html">История</a>
+        <a href="film.html">Фильмография</a>
+        <a href="disc.html">Дискография</a>
+        <a href="link.html">Источники</a>
+        <a href="shop.html" class="active">Заказать</a>
+        <a href="contact.html">Контакты</a>
+      </nav>
+    </div>
+  </header>
 
-      <div class="product">
-        <img src="wbag69.jpg" alt="Женский рюкзак The Beatles">
-        <h3>Женский рюкзак “The Beatles”</h3>
-        <p>Модный рюкзак для женщин с изображением The Beatles. Практичный и стильный аксессуар для всех фанатов группы.</p>
-        <div class="product-info">
-          <p class="price">2200₽</p>
-          <a href="#" class="buy-btn">Купить</a>
-        </div>
-      </div>
+  <main class="wrap">
 
-      <div class="product">
-        <img src="magnit69.jpeg" alt="Набор магнитиков The Beatles">
-        <h3>Набор магнитиков “The Beatles”</h3>
-        <p>Коллекционный набор магнитиков с культовыми изображениями The Beatles. Прекрасный подарок для поклонников группы.</p>
-        <div class="product-info">
-          <p class="price">500₽</p>
-          <a href="#" class="buy-btn">Купить</a>
-        </div>
-      </div>
+    <section class="page-title">
+      <h1>Магазин</h1>
+      <p class="lead">
+        Подборка товаров с символикой The Beatles для коллекции и повседневной жизни.
+        Это учебная демонстрация: оформление заказа имитируется (без оплаты).
+      </p>
+    </section>
 
-      <div class="product">
-        <img src="hoodie69.jpeg" alt="Худи унисекс черная The Beatles">
-        <h3>Худи унисекс черная “The Beatles”</h3>
-        <p>Удобное и стильное худи черного цвета с принтом группы The Beatles. Идеально для прохладных дней и вечерних прогулок.</p>
-        <div class="product-info">
-          <p class="price">2800₽</p>
-          <a href="#" class="buy-btn">Купить</a>
-        </div>
-      </div>
+    <section class="layout">
 
-      <div class="product">
-        <img src="bt69.jpeg" alt="Футболка унисекс черная The Beatles">
-        <h3>Футболка унисекс черная “The Beatles”</h3>
-        <p>Классическая черная футболка с логотипом The Beatles. Отличный выбор для фанатов группы.</p>
-        <div class="product-info">
-          <p class="price">800₽</p>
-          <a href="#" class="buy-btn">Купить</a>
+      <!-- MAIN -->
+      <section class="card">
+        <h2>Каталог</h2>
+
+        <div class="controls" aria-label="Фильтры">
+          <input id="q" class="input" type="text" placeholder="Поиск: сумка, худи, футболка..." />
+          <select id="cat" class="select" aria-label="Категория">
+            <option value="all">Все категории</option>
+            <option value="Аксессуары">Аксессуары</option>
+            <option value="Одежда">Одежда</option>
+            <option value="Сувениры">Сувениры</option>
+          </select>
+          <button id="reset" class="btn" type="button">Сброс</button>
+        </div>
+
+        <div class="meta">
+          <span class="tag"><span class="dot"></span><span id="countLabel">Загрузка…</span></span>
+          <span class="tag">Клик “Купить” — добавить в корзину</span>
+        </div>
+
+        <div id="grid" class="grid" aria-label="Список товаров"></div>
+      </section>
+
+      <!-- CART -->
+      <aside class="card cartBox">
+        <div class="cartTop">
+          <h2 style="margin:0;">Корзина</h2>
+          <span class="cartBadge">🛒 <span id="cartCount">0</span></span>
+        </div>
+
+        <div id="cartEmpty" class="tag" style="justify-content:center;">
+          Корзина пуста — добавь товары из каталога
+        </div>
+
+        <div id="cartList" class="cartList" aria-label="Товары в корзине"></div>
+
+        <div class="sum">
+          <div class="sumRow">
+            <span>Итого</span>
+            <strong id="total">0 ₽</strong>
+          </div>
+          <div class="checkout">
+            <button id="clearCart" class="btn ghost" type="button">Очистить</button>
+            <button id="checkoutBtn" class="btn" type="button">Оформить</button>
+          </div>
+        </div>
+      </aside>
+
+    </section>
+
+    <footer class="site-footer">
+      © 2025 | Учебный проект — The Beatles • Магазин (демо)
+    </footer>
+
+  </main>
+
+  <!-- MODAL: Checkout -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Оформление заказа">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span>Оформление заказа</span>
+        <div id="closeModal" class="close" aria-label="Закрыть">×</div>
+      </div>
+      <div class="modal-body">
+        <div class="tag" style="justify-content:space-between;">
+          <span>Товаров: <b id="mCount">0</b></span>
+          <span>Сумма: <b id="mTotal">0 ₽</b></span>
+        </div>
+
+        <form id="orderForm" class="form">
+          <div class="field">
+            <div class="label">Имя</div>
+            <input class="input" name="name" placeholder="Иван" required />
+          </div>
+          <div class="field">
+            <div class="label">Телефон</div>
+            <input class="input" name="phone" placeholder="+7 (999) 123-45-67" required />
+          </div>
+          <div class="field">
+            <div class="label">Email</div>
+            <input class="input" type="email" name="email" placeholder="mail@example.com" required />
+          </div>
+          <div class="field">
+            <div class="label">Город</div>
+            <input class="input" name="city" placeholder="Москва" required />
+          </div>
+
+          <div class="field textarea">
+            <div class="label">Комментарий к заказу (необязательно)</div>
+            <textarea class="input" name="comment" rows="4" placeholder="Размер/цвет, пожелания по доставке..."></textarea>
+          </div>
+
+          <div class="field textarea">
+            <button class="btn" type="submit">Отправить заявку</button>
+          </div>
+        </form>
+
+        <div class="help">
+          Это демонстрационная форма. После отправки мы покажем “успешно” и очистим корзину.
         </div>
       </div>
     </div>
-
-    <hr>
-    <p style="text-align:center;">
-      💿 Также вы можете оформить предзаказ на <strong>лимитированные издания</strong>, редкие
-      записи, постеры и памятные коллекционные предметы, посвящённые великой четвёрке.
-    </p>
   </div>
 
+  <script>
+    // ===== DATA (твои товары) =====
+    const products = [
+      { id:"bag",  cat:"Аксессуары", title:"Сумочка на плечо “The Beatles”", price:1500, img:"mini269.webp",
+        desc:"Элегантная сумочка на плечо с логотипом The Beatles. Подходит для прогулок и вечерних выходов." },
+      { id:"shopper", cat:"Аксессуары", title:"Шоппер “The Beatles”", price:1200, img:"shoper69.jpg",
+        desc:"Вместительный шоппер с принтом логотипа. Хорош для покупок и повседневного использования." },
+      { id:"rucksack", cat:"Аксессуары", title:"Женский рюкзак “The Beatles”", price:2200, img:"wbag69.jpg",
+        desc:"Практичный рюкзак с тематическим изображением — удобный аксессуар для фанатов группы." },
+      { id:"magnets", cat:"Сувениры", title:"Набор магнитиков “The Beatles”", price:500, img:"magnit69.jpeg",
+        desc:"Коллекционный набор магнитов с культовыми образами. Отличный небольшой подарок." },
+      { id:"hoodie", cat:"Одежда", title:"Худи унисекс чёрное “The Beatles”", price:2800, img:"hoodie69.webp",
+        desc:"Тёплое худи с принтом группы. Идеально для прохладных дней и вечерних прогулок." },
+      { id:"tshirt", cat:"Одежда", title:"Футболка унисекс чёрная “The Beatles”", price:800, img:"bt69.webp",
+        desc:"Классическая чёрная футболка с логотипом. База для любого гардероба фаната." }
+    ];
+
+    // ===== UI refs =====
+    const elGrid = document.getElementById("grid");
+    const elQ = document.getElementById("q");
+    const elCat = document.getElementById("cat");
+    const elReset = document.getElementById("reset");
+    const elCount = document.getElementById("countLabel");
+
+    const elCartCount = document.getElementById("cartCount");
+    const elCartList = document.getElementById("cartList");
+    const elCartEmpty = document.getElementById("cartEmpty");
+    const elTotal = document.getElementById("total");
+    const elClear = document.getElementById("clearCart");
+    const elCheckout = document.getElementById("checkoutBtn");
+
+    const modal = document.getElementById("modal");
+    const closeModal = document.getElementById("closeModal");
+    const mCount = document.getElementById("mCount");
+    const mTotal = document.getElementById("mTotal");
+    const orderForm = document.getElementById("orderForm");
+
+    // cart: {id: qty}
+    const cart = {};
+
+    function rub(n){
+      return `${n.toLocaleString("ru-RU")} ₽`;
+    }
+
+    function norm(s){
+      return (s || "").toString().toLowerCase().replace(/ё/g,"е").trim();
+    }
+
+    function cartStats(){
+      let count = 0, sum = 0;
+      for(const id in cart){
+        const qty = cart[id];
+        const p = products.find(x => x.id === id);
+        if(!p) continue;
+        count += qty;
+        sum += p.price * qty;
+      }
+      return { count, sum };
+    }
+
+    function renderProducts(list){
+      elGrid.innerHTML = "";
+      list.forEach(p => {
+        const card = document.createElement("article");
+        card.className = "product";
+
+        const thumb = document.createElement("div");
+        thumb.className = "thumb";
+        const img = document.createElement("img");
+        img.src = p.img;
+        img.alt = p.title;
+        thumb.appendChild(img);
+
+        const body = document.createElement("div");
+        body.className = "p-body";
+
+        const pill = document.createElement("div");
+        pill.className = "pill";
+        pill.textContent = p.cat;
+
+        const title = document.createElement("h3");
+        title.className = "p-title";
+        title.textContent = p.title;
+
+        const desc = document.createElement("p");
+        desc.className = "p-desc";
+        desc.textContent = p.desc;
+
+        const row = document.createElement("div");
+        row.className = "p-row";
+
+        const price = document.createElement("div");
+        price.className = "price";
+        price.textContent = rub(p.price);
+
+        const buy = document.createElement("button");
+        buy.className = "buy";
+        buy.type = "button";
+        buy.textContent = "Купить";
+        buy.addEventListener("click", () => {
+          cart[p.id] = (cart[p.id] || 0) + 1;
+          renderCart();
+        });
+
+        row.appendChild(price);
+        row.appendChild(buy);
+
+        body.appendChild(pill);
+        body.appendChild(title);
+        body.appendChild(desc);
+        body.appendChild(row);
+
+        card.appendChild(thumb);
+        card.appendChild(body);
+        elGrid.appendChild(card);
+      });
+
+      elCount.textContent = `Показано товаров: ${list.length}`;
+    }
+
+    function renderCart(){
+      const { count, sum } = cartStats();
+      elCartCount.textContent = count;
+      elTotal.textContent = rub(sum);
+
+      elCartList.innerHTML = "";
+
+      const items = Object.keys(cart);
+      elCartEmpty.style.display = items.length ? "none" : "flex";
+
+      items.forEach(id => {
+        const p = products.find(x => x.id === id);
+        const qty = cart[id];
+
+        const item = document.createElement("div");
+        item.className = "cartItem";
+
+        const t = document.createElement("div");
+        t.className = "ciThumb";
+        const im = document.createElement("img");
+        im.src = p.img;
+        im.alt = p.title;
+        t.appendChild(im);
+
+        const main = document.createElement("div");
+        main.className = "ciMain";
+        const name = document.createElement("strong");
+        name.textContent = p.title;
+        const sub = document.createElement("span");
+        sub.textContent = `${p.cat} • ${rub(p.price)}`;
+        main.appendChild(name);
+        main.appendChild(sub);
+
+        const qtyBox = document.createElement("div");
+        qtyBox.className = "qty";
+
+        const minus = document.createElement("button");
+        minus.className = "qbtn";
+        minus.type = "button";
+        minus.textContent = "−";
+        minus.addEventListener("click", () => {
+          cart[id] = Math.max(0, (cart[id] || 0) - 1);
+          if(cart[id] === 0) delete cart[id];
+          renderCart();
+        });
+
+        const val = document.createElement("div");
+        val.className = "qval";
+        val.textContent = qty;
+
+        const plus = document.createElement("button");
+        plus.className = "qbtn";
+        plus.type = "button";
+        plus.textContent = "+";
+        plus.addEventListener("click", () => {
+          cart[id] = (cart[id] || 0) + 1;
+          renderCart();
+        });
+
+        qtyBox.appendChild(minus);
+        qtyBox.appendChild(val);
+        qtyBox.appendChild(plus);
+
+        item.appendChild(t);
+        item.appendChild(main);
+        item.appendChild(qtyBox);
+        elCartList.appendChild(item);
+      });
+
+      // modal stats
+      mCount.textContent = count;
+      mTotal.textContent = rub(sum);
+
+      // disable checkout if empty
+      elCheckout.disabled = (count === 0);
+      elCheckout.style.opacity = (count === 0) ? .55 : 1;
+      elCheckout.style.cursor = (count === 0) ? "not-allowed" : "pointer";
+    }
+
+    function applyFilters(){
+      const q = norm(elQ.value);
+      const cat = elCat.value;
+
+      const filtered = products.filter(p => {
+        if(cat !== "all" && p.cat !== cat) return false;
+        if(!q) return true;
+
+        const hay = norm(`${p.title} ${p.desc} ${p.cat} ${p.price}`);
+        return hay.includes(q);
+      });
+
+      renderProducts(filtered);
+    }
+
+    elQ.addEventListener("input", applyFilters);
+    elCat.addEventListener("change", applyFilters);
+    elReset.addEventListener("click", () => {
+      elQ.value = "";
+      elCat.value = "all";
+      applyFilters();
+    });
+
+    elClear.addEventListener("click", () => {
+      for(const k in cart) delete cart[k];
+      renderCart();
+    });
+
+    // modal open/close
+    function openModal(){
+      const { count } = cartStats();
+      if(count === 0) return;
+      mCount.textContent = cartStats().count;
+      mTotal.textContent = rub(cartStats().sum);
+      modal.classList.add("open");
+    }
+    function close(){
+      modal.classList.remove("open");
+    }
+
+    elCheckout.addEventListener("click", openModal);
+    closeModal.addEventListener("click", close);
+    modal.addEventListener("click", (e) => { if(e.target === modal) close(); });
+    window.addEventListener("keydown", (e) => { if(e.key === "Escape") close(); });
+
+    // submit
+    orderForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const { count, sum } = cartStats();
+      if(count === 0) return;
+
+      alert(`Заявка отправлена!\nТоваров: ${count}\nСумма: ${rub(sum)}\n\n(Демо-режим: оплата не производится)`);
+
+      // clear cart + close
+      for(const k in cart) delete cart[k];
+      renderCart();
+      orderForm.reset();
+      close();
+    });
+
+    // init
+    renderProducts(products);
+    renderCart();
+  </script>
 </body>
 </html>
+

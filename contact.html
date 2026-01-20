@@ -1,148 +1,545 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Контакты — The Beatles</title>
+
   <style>
-    html { scroll-behavior: smooth; height: 100%; }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background-image: url("background.jpg");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      color: #E6FFE6;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      line-height: 1.6;
+    :root{
+      --bg: #070A10;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent: #FFD166;
+      --accent2:#06D6A0;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1100px;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 40, 0, 0.6);
-      z-index: -1;
+    *{ box-sizing: border-box; }
+    html{ scroll-behavior:smooth; height:100%; }
+
+    body{
+      min-height:100vh;
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.75;
+      background:
+        radial-gradient(900px 400px at 15% 10%, rgba(255,209,102,.14), transparent 60%),
+        radial-gradient(800px 420px at 85% 25%, rgba(6,214,160,.12), transparent 60%),
+        radial-gradient(900px 500px at 50% 100%, rgba(255,255,255,.06), transparent 60%),
+        linear-gradient(180deg, #05070C, #070A10);
+      overflow-x:hidden;
     }
 
-    .menu {
-      text-align: center;
-      margin: 40px 0 30px;
-      font-weight: bold;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(7,10,16,.62), rgba(7,10,16,.90)),
+        url("background.jpg") center/cover no-repeat fixed;
+      z-index:-2;
     }
 
-    .menu a {
-      display: inline-block;
-      background-color: rgba(0, 255, 100, 0.15);
-      color: #00FF7F;
-      text-decoration: none;
-      padding: 10px 18px;
-      border: 1px solid #00FF7F;
-      border-radius: 25px;
-      margin: 4px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 8px rgba(0, 255, 100, 0.25);
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.20;
+      z-index:-1;
+      pointer-events:none;
     }
 
-    .menu a:hover {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
-      transform: translateY(-2px);
-      text-decoration: none;
+    /* ====== TOPBAR ====== */
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(7,10,16,.55);
+      border-bottom: 1px solid var(--stroke);
     }
 
-    .menu a.active {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
+    .topbar-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content: space-between;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 190px;
+    }
+
+    .logo{
+      width:38px; height:38px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,209,102,.95), rgba(255,209,102,.2) 55%, transparent 60%),
+        linear-gradient(135deg, rgba(6,214,160,.9), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    .brand-title{ display:flex; flex-direction:column; line-height:1.1; }
+    .brand-title strong{ font-size: 14px; letter-spacing:.4px; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
+
+    nav.menu{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content:flex-end;
+    }
+
+    .menu a{
+      text-decoration:none;
+      color: var(--muted);
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .2s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .menu a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      transform: translateY(-1px);
+    }
+
+    .menu a.active{
+      color: #101318;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border-color: rgba(255,209,102,.35);
+      box-shadow: 0 12px 30px rgba(255,209,102,.18);
       cursor: default;
     }
 
-    h1 {
-      text-align: center;
-      color: #00FF7F;
-      text-shadow: 0 0 12px #00FF7F, 2px 2px 4px #000;
-      margin-bottom: 20px;
+    /* ====== PAGE ====== */
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 26px 18px 70px;
     }
 
-    .content {
-      flex: 1;
-      max-width: 900px;
-      margin: 0 auto 60px;
-      background-color: rgba(0, 50, 0, 0.6);
-      padding: 35px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
-      animation: fadeInUp 1s ease;
+    .hero{
+      margin-top: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      padding: 22px 22px;
+      position:relative;
+      overflow:hidden;
     }
 
-    h2 {
-      text-align: center;
-      color: #7CFFB2;
-      text-shadow: 1px 1px 3px #000;
-      margin-bottom: 15px;
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(560px 240px at 18% 10%, rgba(255,209,102,.14), transparent 60%);
+      pointer-events:none;
     }
 
-    p {
-      text-align: justify;
-      background-color: rgba(0, 0, 0, 0.35);
-      padding: 15px 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 255, 100, 0.12);
-      margin: 15px 0;
-      transition: transform 0.3s ease;
+    h1{
+      margin:0;
+      font-size: clamp(26px, 2.6vw, 40px);
+      letter-spacing: .2px;
     }
 
-    p:hover { transform: scale(1.01); }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 95ch;
+      font-size: 15.5px;
     }
 
-    a { color: #7CFFB2; }
-    a:hover { color: #00FF7F; }
+    .layout{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items:start;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+
+    .muted{ color: var(--muted); font-size: 14.5px; }
+
+    /* ====== contact chips ====== */
+    .chips{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .chip{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 12px;
+      flex: 1 1 240px;
+      min-width: 220px;
+    }
+
+    .icon{
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 900;
+      color:#071014;
+      background: linear-gradient(90deg, var(--accent2), #8CF2D7);
+      border: 1px solid rgba(6,214,160,.30);
+      box-shadow: 0 14px 34px rgba(6,214,160,.12);
+      flex: 0 0 auto;
+    }
+
+    .chip strong{
+      display:block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .chip a{
+      color: var(--text);
+      text-decoration:none;
+      font-weight: 800;
+    }
+    .chip a:hover{
+      color: var(--accent2);
+      text-decoration: underline;
+    }
+
+    /* ====== Form ====== */
+    .form{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .label{
+      font-size: 12.5px;
+      color: rgba(255,255,255,.72);
+    }
+
+    .input, .textarea, .btn{
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: .2s ease;
+    }
+
+    .input::placeholder, .textarea::placeholder{ color: rgba(255,255,255,.45); }
+
+    .input:focus, .textarea:focus{
+      border-color: rgba(255,209,102,.35);
+      box-shadow: 0 0 0 4px rgba(255,209,102,.10);
+    }
+
+    .textarea{ grid-column: 1 / -1; resize: vertical; min-height: 120px; }
+
+    .btnRow{ grid-column: 1 / -1; display:flex; gap: 10px; flex-wrap: wrap; }
+
+    .btn{
+      cursor:pointer;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border-color: rgba(255,209,102,.30);
+      color:#071014;
+    }
+    .btn:hover{ filter: brightness(1.02); transform: translateY(-1px); }
+
+    .btn.ghost{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+    }
+
+    .note{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    /* ====== FAQ ====== */
+    .faq{
+      margin-top: 12px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    details{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 10px 12px;
+    }
+
+    summary{
+      cursor:pointer;
+      font-weight: 900;
+      color: rgba(255,255,255,.90);
+      list-style: none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+
+    details p{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer.site-footer{
+      margin-top: 18px;
+      padding: 18px;
+      color: rgba(255,255,255,.55);
+      text-align:center;
+      font-size: 12.5px;
+    }
+
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      .form{ grid-template-columns: 1fr; }
+      .brand{ min-width: auto; }
+      nav.menu{ justify-content: center; }
+      .topbar-inner{ flex-direction: column; align-items: stretch; }
+    }
   </style>
 </head>
 
 <body>
-  <div class="menu">
-    <a href="index.html">Главная</a>
-    <a href="info.html">Общая информация</a>
-    <a href="history.html">История</a>
-    <a href="film.html">Фильмография</a>
-    <a href="disc.html">Дискография</a>
-    <a href="link.html">Источники</a>
-    <a href="shop.html">Заказать</a>
-    <a href="contact.html" class="active">Контакты</a>
-  </div>
 
-  <div class="content">
-    <h1><em>Контакты и связь с The Beatles</em></h1>
-    <h2>Фан-клуб и официальные связи</h2>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-title">
+          <strong>The Beatles</strong>
+          <span>Обратная связь</span>
+        </div>
+      </div>
 
-    <p>На пике популярности у группы <strong>The Beatles</strong> существовал один из крупнейших фан-клубов в истории музыки. К 1964 году в него входило более миллиона человек по всему миру! Члены клуба получали эксклюзивные открытки, письма и редкие фотографии музыкантов. Главный офис фан-клуба находился в Лондоне, а филиалы действовали в США, Канаде, Японии и Австралии.</p>
+      <nav class="menu" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="info.html">Общая информация</a>
+        <a href="history.html">История</a>
+        <a href="film.html">Фильмография</a>
+        <a href="disc.html">Дискография</a>
+        <a href="link.html">Источники</a>
+        <a href="shop.html">Заказать</a>
+        <a href="contact.html" class="active">Контакты</a>
+      </nav>
+    </div>
+  </header>
 
-    <p>Сегодня официальное наследие The Beatles курируется компанией <em>Apple Corps Ltd.</em>, основанной самими участниками в 1968 году. Через неё распространяются лицензионные записи, документальные фильмы и коллекционные издания. Современные контакты и новости о группе можно найти на официальном сайте: <a href="https://www.thebeatles.com" target="_blank">thebeatles.com</a>.</p>
+  <main class="wrap">
 
-    <h2>Студии и продюсеры</h2>
-    <p>Большая часть легендарных записей The Beatles была создана в студии <strong>Abbey Road Studios</strong> в Лондоне под руководством продюсера Джорджа Мартина. Эта студия до сих пор принимает туристов и поклонников группы со всего мира. Посетители могут пройтись по знаменитому пешеходному переходу, запечатлённому на обложке альбома <em>Abbey Road</em>.</p>
+    <section class="hero">
+      <h1>Контакты</h1>
+      <p class="lead">
+        Этот сайт — учебный проект о The Beatles. Здесь нет “официальной связи” с группой, но мы оставили
+        полезные ссылки и форму обратной связи для вопросов по проекту/сайту.
+      </p>
+    </section>
 
-    <h2>Связь с командой проекта</h2>
-    <p>Данный сайт является учебным проектом, созданным для знакомства студентов с историей легендарной четвёрки и принципами веб-дизайна. Мы старались объединить историческую достоверность, современную подачу и визуальную эстетику, вдохновлённую духом 60-х годов.</p>
+    <section class="layout">
 
-    <p>По вопросам сотрудничества и обратной связи вы можете написать на адрес:
-      <strong><a href="mailto:croissnoir@gmail.com">savkinilya@gmail.com</a></strong>
-    </p>
+      <!-- LEFT: info -->
+      <section class="card">
+        <h2>Полезные ссылки</h2>
+        <p class="muted" style="margin:0;">
+          Если ищешь официальные новости, релизы и материалы — лучше всего начинать с официальных ресурсов.
+        </p>
 
-    <p>Благодарим вас за интерес к творчеству <em>The Beatles</em> и надеемся, что наш сайт подарил вам вдохновение и новые знания о самой влиятельной группе XX века.</p>
-  </div>
+        <div class="chips">
+          <div class="chip">
+            <div class="icon">★</div>
+            <div>
+              <strong>Официальный сайт</strong>
+              <a href="https://www.thebeatles.com" target="_blank" rel="noopener">thebeatles.com</a>
+            </div>
+          </div>
+
+          <div class="chip">
+            <div class="icon">♪</div>
+            <div>
+              <strong>Студия Abbey Road</strong>
+              <a href="https://www.abbeyroad.com" target="_blank" rel="noopener">abbeyroad.com</a>
+            </div>
+          </div>
+
+          <div class="chip">
+            <div class="icon">i</div>
+            <div>
+              <strong>Справка / факты</strong>
+              <a href="https://en.wikipedia.org/wiki/The_Beatles" target="_blank" rel="noopener">Wikipedia</a>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:16px;">Про фан-клуб (кратко)</h2>
+        <p class="muted" style="margin:0;">
+          В 1960-е “битломания” стала феноменом массовой культуры — фан-клубы росли по всему миру, а сегодня
+          наследие курируется правообладателями и официальными командами. Для актуальных новостей ориентируйся
+          на официальный сайт.
+        </p>
+      </section>
+
+      <!-- RIGHT: form + faq -->
+      <aside class="card">
+        <h2>Связь с командой проекта</h2>
+        <p class="muted" style="margin:0;">
+          Напиши нам — по ошибкам на сайте, предложениям или вопросам по проекту.
+        </p>
+
+        <!-- поменяй email на свой при необходимости -->
+        <div class="chips" style="margin-top:10px;">
+          <div class="chip" style="flex:1 1 100%;">
+            <div class="icon">✉</div>
+            <div>
+              <strong>Email</strong>
+              <a href="mailto:croissnoir@gmail.com">ilyasavkin@gmail.com</a>
+            </div>
+          </div>
+        </div>
+
+        <form id="contactForm" class="form">
+          <div class="field">
+            <div class="label">Имя</div>
+            <input class="input" name="name" placeholder="Как к тебе обращаться?" required />
+          </div>
+
+          <div class="field">
+            <div class="label">Email</div>
+            <input class="input" type="email" name="email" placeholder="mail@example.com" required />
+          </div>
+
+          <div class="field" style="grid-column: 1 / -1;">
+            <div class="label">Тема</div>
+            <input class="input" name="subject" placeholder="Например: ошибка на странице, предложение..." required />
+          </div>
+
+          <div class="field" style="grid-column: 1 / -1;">
+            <div class="label">Сообщение</div>
+            <textarea class="textarea" name="message" placeholder="Опиши подробнее, что нужно исправить/добавить..." required></textarea>
+          </div>
+
+          <div class="btnRow">
+            <button class="btn" type="submit">Отправить</button>
+            <button class="btn ghost" type="reset">Очистить</button>
+          </div>
+        </form>
+
+        <div class="note">
+          Демо-режим: форма не отправляет данные на сервер, а показывает уведомление “успешно”.
+        </div>
+
+        <h2 style="margin-top:16px;">FAQ</h2>
+        <div class="faq">
+          <details>
+            <summary>Это официальный сайт The Beatles?</summary>
+            <p>Нет. Это учебный проект. Официальные материалы — на thebeatles.com.</p>
+          </details>
+
+          <details>
+            <summary>Можно ли купить товары прямо здесь?</summary>
+            <p>Раздел “Заказать” — демонстрация интерфейса магазина. Реальная оплата/доставка не подключены.</p>
+          </details>
+
+          <details>
+            <summary>Можно добавить новые страницы/разделы?</summary>
+            <p>Да: галерею, таймлайн по годам, отдельные страницы участников, интерактивные карточки альбомов и т.д.</p>
+          </details>
+        </div>
+      </aside>
+
+    </section>
+
+    <footer class="site-footer">
+      © 2025 | Учебный проект — The Beatles • Контакты
+    </footer>
+
+  </main>
+
+  <script>
+    const form = document.getElementById("contactForm");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const data = new FormData(form);
+      const name = (data.get("name") || "").toString().trim();
+      const email = (data.get("email") || "").toString().trim();
+      const subject = (data.get("subject") || "").toString().trim();
+      const message = (data.get("message") || "").toString().trim();
+
+      if(!name || !email || !subject || !message){
+        alert("Заполни, пожалуйста, все поля.");
+        return;
+      }
+
+      alert(
+        "Сообщение отправлено (демо) ✅\n\n" +
+        `Имя: ${name}\n` +
+        `Email: ${email}\n` +
+        `Тема: ${subject}\n\n` +
+        "Спасибо! Мы учтём обратную связь."
+      );
+
+      form.reset();
+    });
+  </script>
 </body>
 </html>
+

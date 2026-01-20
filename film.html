@@ -1,240 +1,680 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Фильмография — The Beatles</title>
+
   <style>
-    body {
-      background-image: url("background.jpg");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      color: #E6FFE6;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      line-height: 1.6;
-      overflow-x: hidden;
+    :root{
+      --bg: #070A10;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent: #FFD166;
+      --accent2:#06D6A0;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1100px;
     }
 
-    .overlay {
-      background-color: rgba(0, 40, 0, 0.62);
-      min-height: 100vh;
-      padding: 40px;
-      animation: fadeIn 1.5s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
+    *{ box-sizing: border-box; }
+    html{ scroll-behavior:smooth; height:100%; }
+
+    body{
+      min-height:100vh;
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.75;
+      background:
+        radial-gradient(900px 400px at 15% 10%, rgba(255,209,102,.14), transparent 60%),
+        radial-gradient(800px 420px at 85% 25%, rgba(6,214,160,.12), transparent 60%),
+        radial-gradient(900px 500px at 50% 100%, rgba(255,255,255,.06), transparent 60%),
+        linear-gradient(180deg, #05070C, #070A10);
+      overflow-x:hidden;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(7,10,16,.62), rgba(7,10,16,.90)),
+        url("background.jpg") center/cover no-repeat fixed;
+      z-index:-2;
     }
 
-    /* 🔹 Верхнее меню */
-    .menu {
-      display: flex;
-      justify-content: center;
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.22;
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    /* ====== TOPBAR ====== */
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(7,10,16,.55);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .topbar-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content: space-between;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 190px;
+    }
+
+    .logo{
+      width:38px; height:38px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,209,102,.95), rgba(255,209,102,.2) 55%, transparent 60%),
+        linear-gradient(135deg, rgba(6,214,160,.9), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    .brand-title{ display:flex; flex-direction:column; line-height:1.1; }
+    .brand-title strong{ font-size: 14px; letter-spacing:.4px; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
+
+    nav.menu{
+      display:flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 40px;
+      gap: 8px;
+      justify-content:flex-end;
     }
 
-    .menu a {
-      display: inline-block;
-      background-color: rgba(0, 255, 100, 0.15);
-      color: #00FF7F;
-      text-decoration: none;
-      padding: 10px 18px;
-      border-radius: 25px;
-      border: 1px solid #00FF7F;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      box-shadow: 0 0 8px rgba(0, 255, 100, 0.25);
-      transition: all 0.3s ease;
+    .menu a{
+      text-decoration:none;
+      color: var(--muted);
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .2s ease;
+      font-size: 14px;
+      white-space: nowrap;
     }
 
-    .menu a:hover {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
-      transform: translateY(-2px);
+    .menu a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      transform: translateY(-1px);
     }
 
-    .menu a.active {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
+    .menu a.active{
+      color: #101318;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border-color: rgba(255,209,102,.35);
+      box-shadow: 0 12px 30px rgba(255,209,102,.18);
       cursor: default;
     }
 
-    h1 {
-      text-align: center;
-      color: #00FF7F;
-      text-shadow: 2px 2px 6px #000;
-      margin-bottom: 30px;
-      letter-spacing: 1px;
-      animation: fadeIn 2s ease;
-    }
-
-    /* 🔹 Таблица */
-    table {
-      border-collapse: collapse;
-      width: 90%;
+    /* ====== PAGE ====== */
+    .wrap{
+      max-width: var(--max);
       margin: 0 auto;
-      background-color: rgba(0, 50, 0, 0.55);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      animation: fadeIn 2.2s ease;
+      padding: 26px 18px 70px;
     }
 
-    th, td {
-      border: 1px solid #00FF7F;
-      padding: 12px;
-      text-align: center;
+    .page-title{
+      margin-top: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      padding: 22px 22px;
+      position:relative;
+      overflow:hidden;
     }
 
-    th {
-      background-color: rgba(0, 255, 100, 0.22);
-      color: #E6FFE6;
+    .page-title::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(560px 240px at 18% 10%, rgba(255,209,102,.14), transparent 60%);
+      pointer-events:none;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(26px, 2.6vw, 40px);
+      letter-spacing: .2px;
+    }
+
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 85ch;
+      font-size: 15.5px;
+    }
+
+    .layout{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+
+    .card h2{
+      margin: 0 0 10px;
       font-size: 18px;
+      letter-spacing:.2px;
     }
 
-    td {
-      font-size: 16px;
+    /* ====== Controls ====== */
+    .controls{
+      display:grid;
+      grid-template-columns: 1fr 220px 160px;
+      gap: 10px;
+      align-items:center;
     }
 
-    tr:hover {
-      background-color: rgba(0, 255, 100, 0.15);
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-    }
-
-    img {
-      border-radius: 10px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-
-    img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #00FF7F;
-    }
-
-    /* 🔹 Модальное окно (для увеличения фото) */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 100;
-      padding-top: 60px;
-      left: 0;
-      top: 0;
+    .input, .select, .btn{
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      overflow: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: .2s ease;
     }
 
-    .modal-content {
-      display: block;
-      margin: auto;
-      max-width: 80%;
-      border-radius: 10px;
-      animation: zoomIn 0.5s ease;
+    .input::placeholder{ color: rgba(255,255,255,.45); }
+
+    .input:focus, .select:focus{
+      border-color: rgba(6,214,160,.35);
+      box-shadow: 0 0 0 4px rgba(6,214,160,.10);
     }
 
-    @keyframes zoomIn {
-      from { transform: scale(0.7); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .btn{
+      cursor:pointer;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent2), #8CF2D7);
+      border-color: rgba(6,214,160,.30);
+      color:#071014;
+    }
+    .btn:hover{ filter: brightness(1.02); transform: translateY(-1px); }
+
+    .meta{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13.5px;
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    .close {
-      position: absolute;
-      top: 20px;
-      right: 45px;
-      color: #00FF7F;
-      font-size: 40px;
-      font-weight: bold;
-      transition: 0.3s;
+    .tag{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.80);
+      font-size: 12.5px;
+    }
+
+    .dot{
+      width:8px; height:8px; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      box-shadow: 0 10px 20px rgba(255,209,102,.16);
+    }
+
+    /* ====== Grid of films ====== */
+    .grid{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .film{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .poster{
+      width: 120px;
+      height: 160px;
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
       cursor: pointer;
+      position:relative;
     }
 
-    .close:hover {
-      color: white;
+    .poster img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      transform: scale(1.01);
+      transition: transform .35s ease;
+      filter: contrast(1.05) saturate(1.05);
     }
 
-    /* ссылки */
-    a { color: #7CFFB2; }
-    a:hover { color: #00FF7F; }
+    .poster:hover img{ transform: scale(1.06); }
+
+    .film-info{
+      min-width: 0;
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pill{
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 800;
+      color:#071014;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border: 1px solid rgba(255,209,102,.35);
+      white-space: nowrap;
+    }
+
+    .film-title{
+      margin: 0;
+      font-size: 15.5px;
+      letter-spacing:.2px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .film-sub{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .film-note{
+      margin-top: 6px;
+      color: rgba(255,255,255,.78);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    /* ====== Aside ====== */
+    .aside ul{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+    .aside li{ margin: 8px 0; }
+
+    blockquote{
+      margin: 12px 0 0;
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.85);
+      position: relative;
+    }
+    blockquote::before{
+      content:"“";
+      position:absolute;
+      left: 14px;
+      top: -8px;
+      font-size: 42px;
+      color: rgba(255,209,102,.55);
+      font-weight: 800;
+    }
+    blockquote p{ margin: 0; padding-left: 18px; color: rgba(255,255,255,.88); }
+    blockquote footer{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      padding-left: 18px;
+    }
+
+    /* ====== Modal ====== */
+    .modal{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.82);
+      z-index: 1000;
+      padding: 18px;
+    }
+
+    .modal.open{ display:flex; }
+
+    .modal-box{
+      width: min(920px, 96vw);
+      background: rgba(15,18,26,.85);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 20px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.65);
+      overflow:hidden;
+      backdrop-filter: blur(14px);
+    }
+
+    .modal-head{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.85);
+      font-size: 13.5px;
+    }
+
+    .close{
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.9);
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 900;
+      transition: .2s ease;
+    }
+    .close:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+
+    .modal-img{
+      width:100%;
+      max-height: 78vh;
+      object-fit: contain;
+      display:block;
+      background: rgba(0,0,0,.35);
+    }
+
+    a{ color: #9BFBD9; text-decoration: none; }
+    a:hover{ color: var(--accent2); text-decoration: underline; }
+
+    footer.site-footer{
+      margin-top: 18px;
+      padding: 18px;
+      color: rgba(255,255,255,.55);
+      text-align:center;
+      font-size: 12.5px;
+    }
+
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      .controls{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .film{ grid-template-columns: 1fr; }
+      .poster{ width: 100%; height: 220px; }
+      .brand{ min-width: auto; }
+      nav.menu{ justify-content: center; }
+      .topbar-inner{ flex-direction: column; align-items: stretch; }
+    }
   </style>
 </head>
 
 <body>
-  <div class="overlay">
 
-    <!-- Верхнее меню -->
-    <nav class="menu">
-      <a href="index.html">Главная</a>
-      <a href="info.html">Общая информация</a>
-      <a href="history.html">История</a>
-      <a href="film.html" class="active">Фильмография</a>
-      <a href="disc.html">Дискография</a>
-      <a href="link.html">Источники</a>
-      <a href="shop.html">Заказать</a>
-      <a href="contact.html">Контакты</a>
-    </nav>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-title">
+          <strong>The Beatles</strong>
+          <span>Музыка, эпоха, стиль</span>
+        </div>
+      </div>
 
-    <div>
-      <h1>Фильмография The Beatles</h1>
-
-      <table>
-        <tr>
-          <th>Год</th>
-          <th>Русское название</th>
-          <th>Оригинальное название</th>
-          <th>Афиша</th>
-          <th>Примечание</th>
-        </tr>
-        <tr>
-          <td>1964</td>
-          <td>Вечер трудного дня</td>
-          <td>A Hard Day’s Night</td>
-          <td><img src="ahardday.jpg" width="150" alt="A Hard Day’s Night"></td>
-          <td>Х/ф</td>
-        </tr>
-        <tr>
-          <td>1965</td>
-          <td>На помощь!</td>
-          <td>Help!</td>
-          <td><img src="help.jpg" width="150" alt="Help!"></td>
-          <td>Х/ф</td>
-        </tr>
-        <tr>
-          <td>1967</td>
-          <td>Волшебное таинственное путешествие</td>
-          <td>Magical Mystery Tour</td>
-          <td><img src="mmt.jpg" width="150" alt="Magical Mystery Tour"></td>
-          <td>Х/ф</td>
-        </tr>
-        <tr>
-          <td>1968</td>
-          <td>Жёлтая подводная лодка</td>
-          <td>Yellow Submarine</td>
-          <td><img src="yellowsub.jpg" width="150" alt="Yellow Submarine"></td>
-          <td>М/ф</td>
-        </tr>
-        <tr>
-          <td>1970</td>
-          <td>Пусть будет так</td>
-          <td>Let It Be</td>
-          <td><img src="letitbe.jpg" width="150" alt="Let It Be"></td>
-          <td>Д/ф</td>
-        </tr>
-      </table>
+      <nav class="menu" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="info.html">Общая информация</a>
+        <a href="history.html">История</a>
+        <a href="film.html" class="active">Фильмография</a>
+        <a href="disc.html">Дискография</a>
+        <a href="link.html">Источники</a>
+        <a href="shop.html">Заказать</a>
+        <a href="contact.html">Контакты</a>
+      </nav>
     </div>
+  </header>
 
+  <main class="wrap">
+
+    <section class="page-title">
+      <h1>Фильмография</h1>
+      <p class="lead">
+        Ключевые фильмы и проекты с участием The Beatles. Нажми на постер, чтобы открыть его крупнее.
+        Можно искать по названию и фильтровать по типу.
+      </p>
+    </section>
+
+    <section class="layout">
+
+      <!-- MAIN -->
+      <section class="card">
+        <h2>Фильмы</h2>
+
+        <div class="controls" aria-label="Фильтры">
+          <input id="q" class="input" type="text" placeholder="Поиск: название (например: Help)" />
+          <select id="typeFilter" class="select" aria-label="Фильтр по типу">
+            <option value="all">Все типы</option>
+            <option value="Х/ф">Х/ф</option>
+            <option value="М/ф">М/ф</option>
+            <option value="Д/ф">Д/ф</option>
+          </select>
+          <button id="reset" class="btn" type="button">Сброс</button>
+        </div>
+
+        <div class="meta">
+          <span class="tag"><span class="dot"></span><span id="countLabel">Загрузка…</span></span>
+          <span class="tag">Совет: клик по постеру — увеличить</span>
+        </div>
+
+        <div id="grid" class="grid" aria-label="Список фильмов"></div>
+      </section>
+
+      <!-- ASIDE -->
+      <aside class="card aside">
+        <h2>Что смотреть первым</h2>
+        <ul>
+          <li><strong>A Hard Day’s Night</strong> — классика и “дух” битломании.</li>
+          <li><strong>Help!</strong> — лёгкий приключенческий формат и много музыки.</li>
+          <li><strong>Yellow Submarine</strong> — культовая анимация и визуальная эпоха.</li>
+        </ul>
+
+        <blockquote>
+          <p>Фильмы The Beatles — это не только сюжеты, но и “снимок времени” 60-х.</p>
+          <footer>Почему это интересно сегодня</footer>
+        </blockquote>
+      </aside>
+
+    </section>
+
+    <footer class="site-footer">
+      © The Beatles — учебный/фан-сайт. Изображения и названия принадлежат их правообладателям.
+    </footer>
+
+  </main>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Просмотр постера">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span id="modalTitle">Постер</span>
+        <div id="modalClose" class="close" aria-label="Закрыть">×</div>
+      </div>
+      <img id="modalImg" class="modal-img" alt="Poster">
+    </div>
   </div>
+
+  <script>
+    const films = [
+      { year: 1964, ru: "Вечер трудного дня", en: "A Hard Day’s Night", poster: "ahardday.jpg", type: "Х/ф",
+        note: "Фильм-комедия, который отлично передаёт атмосферу ранней “битломании”." },
+      { year: 1965, ru: "На помощь!", en: "Help!", poster: "help.jpg", type: "Х/ф",
+        note: "Лёгкое приключение с музыкой: динамично, ярко и узнаваемо по стилю эпохи." },
+      { year: 1967, ru: "Волшебное таинственное путешествие", en: "Magical Mystery Tour", poster: "mmt.jpg", type: "Х/ф",
+        note: "Экспериментальный телевизионный проект: настроение психоделической эры." },
+      { year: 1968, ru: "Жёлтая подводная лодка", en: "Yellow Submarine", poster: "yellowsub.jpg", type: "М/ф",
+        note: "Культовая анимация: арт-стиль 60-х и хиты, которые узнаются с первых нот." },
+      { year: 1970, ru: "Пусть будет так", en: "Let It Be", poster: "letitbe.jpg", type: "Д/ф",
+        note: "Документальный финал: студийная работа, репетиции и ощущение завершения эпохи." }
+    ];
+
+    const elGrid = document.getElementById("grid");
+    const elQ = document.getElementById("q");
+    const elType = document.getElementById("typeFilter");
+    const elReset = document.getElementById("reset");
+    const elCount = document.getElementById("countLabel");
+
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modalImg");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalClose = document.getElementById("modalClose");
+
+    function norm(s){
+      return (s || "").toString().toLowerCase().replace(/ё/g,"е").trim();
+    }
+
+    function openModal(src, title){
+      modalImg.src = src;
+      modalImg.alt = title;
+      modalTitle.textContent = title;
+      modal.classList.add("open");
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      modalImg.src = "";
+    }
+
+    modalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
+    window.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
+
+    function render(list){
+      elGrid.innerHTML = "";
+
+      list.forEach(f => {
+        const card = document.createElement("article");
+        card.className = "film";
+
+        const poster = document.createElement("div");
+        poster.className = "poster";
+        const img = document.createElement("img");
+        img.src = f.poster;
+        img.alt = f.en;
+        poster.appendChild(img);
+
+        poster.addEventListener("click", () => {
+          openModal(f.poster, `${f.en} (${f.year})`);
+        });
+
+        const info = document.createElement("div");
+        info.className = "film-info";
+
+        const pill = document.createElement("div");
+        pill.className = "pill";
+        pill.textContent = `${f.year} • ${f.type}`;
+
+        const title = document.createElement("h3");
+        title.className = "film-title";
+        title.textContent = f.ru;
+
+        const sub = document.createElement("p");
+        sub.className = "film-sub";
+        sub.textContent = f.en;
+
+        const note = document.createElement("div");
+        note.className = "film-note";
+        note.textContent = f.note || "";
+
+        info.appendChild(pill);
+        info.appendChild(title);
+        info.appendChild(sub);
+        info.appendChild(note);
+
+        card.appendChild(poster);
+        card.appendChild(info);
+        elGrid.appendChild(card);
+      });
+
+      elCount.textContent = `Показано: ${list.length}`;
+    }
+
+    function applyFilters(){
+      const q = norm(elQ.value);
+      const type = elType.value;
+
+      const filtered = films.filter(f => {
+        if(type !== "all" && f.type !== type) return false;
+        if(!q) return true;
+        const hay = norm(`${f.year} ${f.ru} ${f.en} ${f.type}`);
+        return hay.includes(q);
+      });
+
+      render(filtered);
+    }
+
+    elQ.addEventListener("input", applyFilters);
+    elType.addEventListener("change", applyFilters);
+    elReset.addEventListener("click", () => {
+      elQ.value = "";
+      elType.value = "all";
+      applyFilters();
+    });
+
+    render(films);
+  </script>
 </body>
 </html>
+

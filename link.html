@@ -1,209 +1,601 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Источники — The Beatles</title>
 
   <style>
-    :root {
-      --gold: #FFD700;
-      --text-dark: #FFFAF0;
-      --text-light: #222;
-    }
+    :root{
+      --bg: #070A10;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent: #FFD166;
+      --accent2:#06D6A0;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1100px;
 
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: url("background.jpg") center/cover fixed no-repeat;
-      color: var(--text-dark);
-      transition: background-color 0.5s ease, color 0.5s ease;
-      position: relative;
-      min-height: 100vh;
-      padding-bottom: 140px; /* место под футер */
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.55);
-      z-index: -1;
-      transition: background-color 0.5s ease;
+      --bgImg: url("background.jpg");
+      --overlay1: rgba(7,10,16,.62);
+      --overlay2: rgba(7,10,16,.90);
     }
 
     /* Светлая тема */
-    body.light-theme {
-      background: url("background-light.jpg") center/cover fixed no-repeat;
-      color: var(--text-light);
+    body.light{
+      --bgImg: url("background-light.jpg");
+      --overlay1: rgba(255,255,255,.65);
+      --overlay2: rgba(255,255,255,.90);
+
+      --text: rgba(17,20,26,.92);
+      --muted: rgba(17,20,26,.70);
+      --stroke: rgba(17,20,26,.12);
+      --glass: rgba(255,255,255,.70);
+      --glass2: rgba(255,255,255,.62);
+      --shadow: 0 18px 60px rgba(0,0,0,.22);
     }
 
-    body.light-theme::before {
-      background-color: rgba(255, 255, 255, 0.45);
+    *{ box-sizing: border-box; }
+    html{ scroll-behavior:smooth; height:100%; }
+
+    body{
+      min-height:100vh;
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.75;
+      background:
+        radial-gradient(900px 400px at 15% 10%, rgba(255,209,102,.14), transparent 60%),
+        radial-gradient(800px 420px at 85% 25%, rgba(6,214,160,.12), transparent 60%),
+        radial-gradient(900px 500px at 50% 100%, rgba(255,255,255,.06), transparent 60%),
+        linear-gradient(180deg, #05070C, #070A10);
     }
 
-    /* Меню */
-    .menu {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 40px 0;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(180deg, var(--overlay1), var(--overlay2)),
+        var(--bgImg) center/cover no-repeat fixed;
+      z-index:-2;
     }
 
-    .menu a {
-      display: inline-block;
-      background-color: rgba(255, 215, 0, 0.15);
-      color: var(--gold);
-      text-decoration: none;
-      padding: 10px 18px;
-      border-radius: 25px;
-      border: 1px solid var(--gold);
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
-      transition: all 0.3s ease;
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.18;
+      z-index:-1;
+      pointer-events:none;
     }
 
-    .menu a:hover {
-      background-color: var(--gold);
-      color: #000;
-      box-shadow: 0 0 15px var(--gold);
-      transform: translateY(-2px);
+    /* ====== TOPBAR ====== */
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(7,10,16,.55);
+      border-bottom: 1px solid var(--stroke);
+    }
+    body.light ._toggleBarFix{
+      background: rgba(255,255,255,.55);
+    }
+    body.light .topbar{
+      background: rgba(255,255,255,.55);
     }
 
-    h1 {
-      text-align: center;
-      color: var(--gold);
-      text-shadow: 2px 2px 6px #000;
-      margin-bottom: 30px;
-      font-size: 32px;
-    }
-
-    .content {
-      max-width: 850px;
+    .topbar-inner{
+      max-width: var(--max);
       margin: 0 auto;
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
-      animation: fadeInUp 1s ease;
+      padding: 14px 18px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content: space-between;
     }
 
-    body.light-theme .content {
-      background: rgba(255, 255, 255, 0.85);
-      color: var(--text-light);
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 190px;
     }
 
-    ul {
-      list-style-type: none;
-      padding: 0;
+    .logo{
+      width:38px; height:38px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,209,102,.95), rgba(255,209,102,.2) 55%, transparent 60%),
+        linear-gradient(135deg, rgba(6,214,160,.9), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.20);
     }
 
-    ul li {
-      background-color: rgba(255, 215, 0, 0.1);
-      border-left: 4px solid var(--gold);
-      margin: 10px 0;
-      padding: 12px 16px;
-      border-radius: 8px;
-      transition: all 0.3s ease;
+    .brand-title{ display:flex; flex-direction:column; line-height:1.1; }
+    .brand-title strong{ font-size: 14px; letter-spacing:.4px; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
+
+    nav.menu{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content:flex-end;
     }
 
-    ul li:hover {
-      background-color: rgba(255, 215, 0, 0.25);
-      transform: scale(1.02);
+    .menu a{
+      text-decoration:none;
+      color: var(--muted);
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .2s ease;
+      font-size: 14px;
+      white-space: nowrap;
     }
 
-    ul li a {
-      color: var(--gold);
-      text-decoration: none;
-      font-weight: bold;
+    .menu a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      transform: translateY(-1px);
     }
 
-    ul li a:hover {
-      color: #FFF;
+    .menu a.active{
+      color: #101318;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border-color: rgba(255,209,102,.35);
+      box-shadow: 0 12px 30px rgba(255,209,102,.18);
+      cursor: default;
+    }
+
+    /* ====== PAGE ====== */
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 26px 18px 40px;
+    }
+
+    .page-title{
+      margin-top: 16px;
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      padding: 22px 22px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .page-title::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(560px 240px at 18% 10%, rgba(255,209,102,.14), transparent 60%);
+      pointer-events:none;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(26px, 2.6vw, 40px);
+      letter-spacing: .2px;
+    }
+
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 90ch;
+      font-size: 15.5px;
+    }
+
+    .layout{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .card{
+      background: linear-gradient(180deg, var(--glass2), rgba(255,255,255,.03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.20);
+    }
+
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+
+    /* ====== Sources ====== */
+    .sources{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .source{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 14px;
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+    }
+
+    .badge{
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#071014;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--accent2), #8CF2D7);
+      border: 1px solid rgba(6,214,160,.30);
+      box-shadow: 0 14px 34px rgba(6,214,160,.12);
+    }
+
+    .source-main{
+      min-width:0;
+      display:flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .source-main a{
+      color: var(--text);
+      font-weight: 800;
+      text-decoration:none;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .source-main a:hover{
       text-decoration: underline;
+      color: var(--accent2);
     }
 
- z
+    .source-desc{
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin:0;
+    }
+
+    .source-meta{
+      color: rgba(255,255,255,.70);
+      font-size: 12.5px;
+      margin-top: 2px;
+    }
+    body.light .source-meta{ color: rgba(17,20,26,.65); }
+
+    .tiny{
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    /* ====== Aside ====== */
+    .btnRow{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      text-decoration:none;
+      transition: .2s ease;
+      font-weight: 800;
+      font-size: 14px;
+      cursor:pointer;
+    }
+
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+
+    .btn.primary{
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border-color: rgba(255,209,102,.35);
+      color:#071014;
+      box-shadow: 0 14px 34px rgba(255,209,102,.14);
+    }
+
+    blockquote{
+      margin: 12px 0 0;
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.85);
+      position: relative;
+    }
+    blockquote::before{
+      content:"“";
+      position:absolute;
+      left: 14px;
+      top: -8px;
+      font-size: 42px;
+      color: rgba(255,209,102,.55);
+      font-weight: 900;
+    }
+    blockquote p{ margin: 0; padding-left: 18px; color: rgba(255,255,255,.88); }
+    blockquote footer{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      padding-left: 18px;
+    }
+
+    /* ====== Footer ====== */
+    footer.site-footer{
+      margin-top: 18px;
+      padding: 18px;
+      color: rgba(255,255,255,.55);
+      text-align:center;
+      font-size: 12.5px;
+    }
+    body.light footer.site-footer{ color: rgba(17,20,26,.62); }
+
+    /* ====== Modal ====== */
+    .modal{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.70);
+      z-index: 1000;
+      padding: 18px;
+    }
+    body.light .modal{ background: rgba(0,0,0,.55); }
+
+    .modal.open{ display:flex; }
+
+    .modal-box{
+      width: min(720px, 96vw);
+      background: rgba(15,18,26,.85);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 20px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.45);
+      overflow:hidden;
+      backdrop-filter: blur(14px);
+      color: rgba(255,255,255,.92);
+    }
+    body.light .modal-box{
+      background: rgba(255,255,255,.85);
+      color: rgba(17,20,26,.92);
+    }
+
+    .modal-head{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      font-size: 13.5px;
+    }
+    body.light .modal-head{ border-bottom: 1px solid rgba(17,20,26,.12); }
+
+    .close{
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: inherit;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 900;
+      transition: .2s ease;
+    }
+    .close:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+
+    .modal-body{
+      padding: 16px 16px 18px;
+      color: inherit;
+    }
+    .modal-body p{ margin: 8px 0; color: inherit; }
+    .modal-body a{ color: inherit; }
+
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      .brand{ min-width: auto; }
+      nav.menu{ justify-content: center; }
+      .topbar-inner{ flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
 
 <body>
-  <!-- Меню -->
-  <div class="menu">
-    <a href="index.html">Главная</a>
-    <a href="info.html">Общая информация</a>
-    <a href="history.html">История</a>
-    <a href="film.html">Фильмография</a>
-    <a href="disc.html">Дискография</a>
-	<a href="link.html"class="active">Источники</a>
-    <a href="shop.html">Заказать</a>
-    <a href="contact.html">Контакты</a>
-  </div>
 
-  <!-- Контент -->
-  <div class="content">
-    <h1>Источники информации</h1>
-    <p>При создании этого учебного сайта использованы проверенные и авторитетные источники, посвящённые истории и творчеству легендарной группы <strong>The Beatles</strong>:</p>
-    <ul>
-      <li><a href="https://www.thebeatles.com" target="_blank">Официальный сайт The Beatles</a> — новости, архивы и официальные материалы.</li>
-      <li><a href="https://en.wikipedia.org/wiki/The_Beatles" target="_blank">Wikipedia: The Beatles</a> — энциклопедическая информация и хронология событий.</li>
-      <li><a href="https://www.biography.com/musician/the-beatles" target="_blank">Biography.com — The Beatles</a> — биографии участников и аналитические статьи.</li>
-      <li>Учебные материалы и справочники по HTML и CSS для оформления сайта.</li>
-    </ul>
-    <p style="text-align:center; margin-top:25px;">Спасибо всем авторам, чьи материалы помогли создать этот проект!</p>
-  </div>
-
-  <!-- Нижняя панель -->
-  <footer class="footer">
-    <div class="footer-left">
-      <div class="logo">
-        <img src="CroissNoir.png" alt="CroissNoir Logo">
-        <span>CroissNoir</span>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-title">
+          <strong>The Beatles</strong>
+          <span>Музыка, эпоха, стиль</span>
+        </div>
       </div>
-    </div>
 
-    <div class="footer-center">
-      <p>© 2025 | Учебный проект — The Beatles</p>
-      <p>Создано в рамках курса по веб-дизайну</p>
+      <nav class="menu" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="info.html">Общая информация</a>
+        <a href="history.html">История</a>
+        <a href="film.html">Фильмография</a>
+        <a href="disc.html">Дискография</a>
+        <a href="link.html" class="active">Источники</a>
+        <a href="shop.html">Заказать</a>
+        <a href="contact.html">Контакты</a>
+      </nav>
     </div>
+  </header>
 
-    <div class="footer-right">
-      <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌙</button>
-      <button class="contact-btn" id="contactBtn">Контакты создателей</button>
-    </div>
-  </footer>
+  <main class="wrap">
 
-  <!-- Модальное окно контактов -->
-  <div id="contactModal" class="contact-modal">
-    <div class="contact-content">
-      <span class="close-contact">&times;</span>
-      <h2>Контакты создателей</h2>
-      <p>Руководитель проекта: <b>Белов Глеб</b></p>
-      <p>Дизайн и разработка: <b>Команда CroissNoir</b></p>
-      <p>Email: <a href="mailto:croissnoir@gmail.com">croissnoir@gmail.com</a></p>
+    <section class="page-title">
+      <h1>Источники</h1>
+      <p class="lead">
+        Здесь собраны ресурсы, которые использовались при создании учебного сайта: официальные страницы,
+        энциклопедии и справочные материалы. Ссылки открываются в новой вкладке.
+      </p>
+    </section>
+
+    <section class="layout">
+
+      <!-- MAIN -->
+      <section class="card">
+        <h2>Список источников</h2>
+
+        <div class="sources" aria-label="Источники">
+          <div class="source">
+            <div class="badge">1</div>
+            <div class="source-main">
+              <a href="https://www.thebeatles.com" target="_blank" rel="noopener">Официальный сайт The Beatles</a>
+              <p class="source-desc">Новости, архивы, релизы и официальные материалы.</p>
+              <div class="source-meta">thebeatles.com</div>
+            </div>
+          </div>
+
+          <div class="source">
+            <div class="badge">2</div>
+            <div class="source-main">
+              <a href="https://en.wikipedia.org/wiki/The_Beatles" target="_blank" rel="noopener">Wikipedia: The Beatles</a>
+              <p class="source-desc">Хронология, основные события, дискография и справочные данные.</p>
+              <div class="source-meta">wikipedia.org</div>
+            </div>
+          </div>
+
+          <div class="source">
+            <div class="badge">3</div>
+            <div class="source-main">
+              <a href="https://www.biography.com/musician/the-beatles" target="_blank" rel="noopener">Biography.com — The Beatles</a>
+              <p class="source-desc">Краткая биография группы и статьи о культурном влиянии.</p>
+              <div class="source-meta">biography.com</div>
+            </div>
+          </div>
+
+          <div class="source">
+            <div class="badge">4</div>
+            <div class="source-main">
+              <span style="font-weight:800;">Учебные материалы по HTML/CSS</span>
+              <p class="source-desc">Справочники и методички для верстки и оформления интерфейса.</p>
+              <div class="source-meta">локальные материалы / конспекты</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="tiny">
+          Спасибо авторам и правообладателям материалов, которые помогли в создании проекта.
+        </p>
+      </section>
+
+      <!-- ASIDE -->
+      <aside class="card">
+        <h2>Управление</h2>
+        <p style="margin:0;color:var(--muted);font-size:14.5px;">
+          Можно переключить тему и открыть контакты создателей.
+        </p>
+
+        <div class="btnRow">
+          <button id="themeBtn" class="btn primary" type="button" title="Переключить тему">🌙 Тема</button>
+          <button id="contactBtn" class="btn" type="button">Контакты создателей</button>
+        </div>
+
+        <blockquote>
+          <p>Хорошие источники делают сайт убедительнее — это часть культуры “проверять факты”.</p>
+          <footer>Зачем нужен раздел “Источники”</footer>
+        </blockquote>
+      </aside>
+
+    </section>
+
+    <footer class="site-footer">
+      © 2025 | Учебный проект — The Beatles • CroissNoir
+    </footer>
+
+  </main>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Контакты создателей">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span>Контакты создателей</span>
+        <div id="closeModal" class="close" aria-label="Закрыть">×</div>
+      </div>
+      <div class="modal-body">
+        <p>Руководитель проекта: <b>Белов Глеб</b></p>
+        <p>Дизайн и разработка: <b>Команда CroissNoir</b></p>
+        <p>Email: <a href="mailto:croissnoir@gmail.com"><b>croissnoir@gmail.com</b></a></p>
+        <p style="color:var(--muted);font-size:13.5px;margin-top:12px;">
+          Нажмите Esc или кликните по фону, чтобы закрыть окно.
+        </p>
+      </div>
     </div>
   </div>
 
   <script>
-    // Переключение темы
-    const themeToggle = document.getElementById("themeToggle");
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("light-theme");
-      themeToggle.textContent = document.body.classList.contains("light-theme") ? "☀️" : "🌙";
+    // === Theme ===
+    const themeBtn = document.getElementById("themeBtn");
+
+    function applyTheme(isLight){
+      document.body.classList.toggle("light", isLight);
+      themeBtn.textContent = isLight ? "☀️ Тема" : "🌙 Тема";
+      localStorage.setItem("beatles_theme", isLight ? "light" : "dark");
+    }
+
+    const saved = localStorage.getItem("beatles_theme");
+    applyTheme(saved === "light");
+
+    themeBtn.addEventListener("click", () => {
+      applyTheme(!document.body.classList.contains("light"));
     });
 
-    // Контактное окно
+    // === Modal ===
+    const modal = document.getElementById("modal");
     const contactBtn = document.getElementById("contactBtn");
-    const contactModal = document.getElementById("contactModal");
-    const closeContact = document.querySelector(".close-contact");
+    const closeModal = document.getElementById("closeModal");
 
-    contactBtn.onclick = () => contactModal.style.display = "block";
-    closeContact.onclick = () => contactModal.style.display = "none";
-    window.onclick = (e) => { if (e.target === contactModal) contactModal.style.display = "none"; };
+    function openModal(){ modal.classList.add("open"); }
+    function close(){ modal.classList.remove("open"); }
+
+    contactBtn.addEventListener("click", openModal);
+    closeModal.addEventListener("click", close);
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
   </script>
 </body>
 </html>

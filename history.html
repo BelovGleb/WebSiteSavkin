@@ -1,218 +1,505 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>История — The Beatles</title>
+
   <style>
-    html {
-      scroll-behavior: smooth;
-      height: 100%;
+    :root{
+      --bg: #070A10;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent: #FFD166;
+      --accent2:#06D6A0;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1100px;
     }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background-image: url("background.jpg");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      color: #E6FFE6;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      line-height: 1.6;
+    *{ box-sizing: border-box; }
+    html{ scroll-behavior:smooth; height:100%; }
+
+    body{
+      min-height:100vh;
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.75;
+      background:
+        radial-gradient(900px 400px at 15% 10%, rgba(255,209,102,.14), transparent 60%),
+        radial-gradient(800px 420px at 85% 25%, rgba(6,214,160,.12), transparent 60%),
+        radial-gradient(900px 500px at 50% 100%, rgba(255,255,255,.06), transparent 60%),
+        linear-gradient(180deg, #05070C, #070A10);
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 40, 0, 0.6);
-      z-index: -1;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(7,10,16,.62), rgba(7,10,16,.90)),
+        url("background.jpg") center/cover no-repeat fixed;
+      z-index:-2;
     }
 
-    /* ===== МЕНЮ ===== */
-    .menu {
-      text-align: center;
-      margin: 40px 0 30px;
-      font-weight: bold;
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.22;
+      z-index:-1;
+      pointer-events:none;
     }
 
-    .menu a {
-      display: inline-block;
-      background-color: rgba(0, 255, 100, 0.15);
-      color: #00FF7F;
-      text-decoration: none;
-      padding: 10px 18px;
-      border: 1px solid #00FF7F;
-      border-radius: 25px;
-      margin: 4px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 8px rgba(0, 255, 100, 0.25);
+    /* ====== TOPBAR ====== */
+    .topbar{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(7,10,16,.55);
+      border-bottom: 1px solid var(--stroke);
     }
 
-    .menu a:hover {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
-      transform: translateY(-2px);
-      text-decoration: none;
+    .topbar-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content: space-between;
     }
 
-    .menu a.active {
-      background-color: #00FF7F;
-      color: #003300;
-      box-shadow: 0 0 15px #00FF7F;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 190px;
+    }
+
+    .logo{
+      width:38px; height:38px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,209,102,.95), rgba(255,209,102,.2) 55%, transparent 60%),
+        linear-gradient(135deg, rgba(6,214,160,.9), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    .brand-title{ display:flex; flex-direction:column; line-height:1.1; }
+    .brand-title strong{ font-size: 14px; letter-spacing:.4px; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
+
+    nav.menu{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content:flex-end;
+    }
+
+    .menu a{
+      text-decoration:none;
+      color: var(--muted);
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .2s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .menu a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      transform: translateY(-1px);
+    }
+
+    .menu a.active{
+      color: #101318;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border-color: rgba(255,209,102,.35);
+      box-shadow: 0 12px 30px rgba(255,209,102,.18);
       cursor: default;
     }
 
-    h1 {
-      text-align: center;
-      color: #00FF7F;
-      text-shadow: 0 0 12px #00FF7F, 2px 2px 4px #000;
-      margin-bottom: 20px;
+    /* ====== LAYOUT ====== */
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 26px 18px 70px;
     }
 
-    .content {
-      flex: 1;
-      max-width: 900px;
-      margin: 0 auto 60px;
-      background-color: rgba(0, 50, 0, 0.6);
-      padding: 35px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 255, 100, 0.3);
-      animation: fadeInUp 1s ease;
+    .page-title{
+      margin-top: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      padding: 22px 22px;
+      position:relative;
+      overflow:hidden;
     }
 
-    h2 {
-      text-align: center;
-      color: #7CFFB2;
-      text-shadow: 1px 1px 3px #000;
-      margin-bottom: 15px;
+    .page-title::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(560px 240px at 18% 10%, rgba(255,209,102,.15), transparent 60%);
+      pointer-events:none;
     }
 
-    h3 {
-      color: #00FF7F;
-      text-shadow: 1px 1px 4px #000;
-      margin-top: 40px;
+    h1{
+      margin:0;
+      font-size: clamp(26px, 2.6vw, 40px);
+      letter-spacing: .2px;
     }
 
-    ul {
-      list-style-type: square;
-      text-align: left;
-      background-color: rgba(0, 0, 0, 0.35);
-      border-radius: 10px;
-      padding: 20px 30px;
-      margin: 0 auto 30px;
-      max-width: 500px;
-      box-shadow: 0 0 10px rgba(0, 255, 100, 0.18);
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 85ch;
+      font-size: 15.5px;
     }
 
-    ul li a {
-      color: #00FF7F;
-      text-decoration: none;
-      transition: 0.3s;
+    .layout{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 14px;
+      align-items: start;
     }
 
-    ul li a:hover {
-      color: #7CFFB2;
-      text-decoration: underline;
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
     }
 
-    p {
-      text-align: justify;
-      background-color: rgba(0, 0, 0, 0.4);
-      padding: 15px 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 255, 100, 0.15);
-      margin: 15px 0;
-      transition: transform 0.3s ease;
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing:.2px;
     }
 
-    p:hover {
-      transform: scale(1.01);
+    .card p{
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 15px;
     }
 
-    a {
-      color: #7CFFB2;
+    .card p:last-child{ margin-bottom:0; }
+
+    /* Содержание — чипы */
+    .toc{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
     }
-    a:hover {
-      color: #00FF7F;
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.80);
+      text-decoration:none;
+      font-size: 13.5px;
+      transition: .2s ease;
+    }
+    .chip:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.09);
+    }
+    .dot{
+      width:8px; height:8px; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent2), #8CF2D7);
+      box-shadow: 0 10px 20px rgba(6,214,160,.16);
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Таймлайн */
+    .timeline{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .event{
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+    }
+    .stamp{
+      font-weight: 800;
+      color: #071014;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), #FFE199);
+      border: 1px solid rgba(255,209,102,.35);
+      height: fit-content;
+      width: fit-content;
+      white-space: nowrap;
+    }
+    .event h3{
+      margin: 0 0 6px;
+      font-size: 16px;
+      letter-spacing: .2px;
+      color: rgba(255,255,255,.92);
+    }
+    .event p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+
+    /* Цитата */
+    blockquote{
+      margin: 0;
+      padding: 16px 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.85);
+      position: relative;
+    }
+    blockquote::before{
+      content:"“";
+      position:absolute;
+      left: 14px;
+      top: -8px;
+      font-size: 42px;
+      color: rgba(255,209,102,.55);
+      font-weight: 800;
+    }
+    blockquote p{ margin: 0; padding-left: 18px; color: rgba(255,255,255,.88); }
+    blockquote footer{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      padding-left: 18px;
+    }
+
+    /* Сайдбар */
+    .aside{
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    .note{
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+    .note strong{ color: rgba(255,255,255,.90); }
+
+    a{ color: #9BFBD9; text-decoration: none; }
+    a:hover{ color: var(--accent2); text-decoration: underline; }
+
+    footer.site-footer{
+      margin-top: 18px;
+      padding: 18px;
+      color: rgba(255,255,255,.55);
+      text-align:center;
+      font-size: 12.5px;
+    }
+
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+      .event{ grid-template-columns: 1fr; }
+      .brand{ min-width: auto; }
+      nav.menu{ justify-content: center; }
+      .topbar-inner{ flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 
 <body>
-  <div class="menu">
-    <a href="index.html">Главная</a>
-    <a href="info.html">Общая информация</a>
-    <a href="history.html" class="active">История</a>
-    <a href="film.html">Фильмография</a>
-    <a href="disc.html">Дискография</a>
-    <a href="link.html">Источники</a>
-    <a href="shop.html">Заказать</a>
-    <a href="contact.html">Контакты</a>
-  </div>
 
-  <div class="content">
-    <h1><em>История группы The Beatles</em></h1>
-    <h2>Содержание</h2>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-title">
+          <strong>The Beatles</strong>
+          <span>Музыка, эпоха, стиль</span>
+        </div>
+      </div>
 
-    <ul>
-      <li><a href="#c1">Начало</a></li>
-      <li><a href="#c2">Название</a></li>
-      <li><a href="#c3">Первые гастроли</a></li>
-      <li><a href="#c4">Первый контракт</a></li>
-      <li><a href="#c5">Белый альбом</a></li>
-      <li><a href="#c6">Последние альбомы и распад</a></li>
-    </ul>
+      <nav class="menu" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="info.html">Общая информация</a>
+        <a href="history.html" class="active">История</a>
+        <a href="film.html">Фильмография</a>
+        <a href="disc.html">Дискография</a>
+        <a href="link.html">Источники</a>
+        <a href="shop.html">Заказать</a>
+        <a href="contact.html">Контакты</a>
+      </nav>
+    </div>
+  </header>
 
-    <section id="c1">
-      <h3>Начало</h3>
-      <p>The Beatles зародились в конце 1950-х в Ливерпуле — городе, который в те годы переживал подъём музыкальной жизни. Джон Леннон создал школьную группу <em>The Quarrymen</em>, исполнявшую рок-н-ролл в духе Элвиса и Бадди Холли. Вскоре к нему присоединился молодой Пол Маккартни, затем — гитарист Джордж Харрисон, чей технический талант впечатлил Леннона. Эти трое стали сердцем будущих Beatles. Изначально они играли на любительских вечеринках, но их энергия и стремление к совершенству быстро вывели их за рамки школьных подвалов.</p>
-      <p>Ключевым моментом стало знакомство с менеджером Брайаном Эпштейном — человеком, поверившим в талант юных музыкантов. Он помог группе сменить стиль, подобрать единый образ и профессионально подойти к репертуару. Так началась история, которая навсегда изменила музыку.</p>
+  <main class="wrap">
+
+    <section class="page-title">
+      <h1>История группы</h1>
+      <p class="lead">
+        Короткая хронология The Beatles: от школьных выступлений до мировой славы и финальных студийных шедевров.
+        Для удобства — навигация по ключевым главам ниже.
+      </p>
+
+      <div class="toc" aria-label="Содержание">
+        <a class="chip" href="#c1"><span class="dot"></span>Начало</a>
+        <a class="chip" href="#c2"><span class="dot"></span>Название</a>
+        <a class="chip" href="#c3"><span class="dot"></span>Гамбург</a>
+        <a class="chip" href="#c4"><span class="dot"></span>Контракт</a>
+        <a class="chip" href="#c5"><span class="dot"></span>Белый альбом</a>
+        <a class="chip" href="#c6"><span class="dot"></span>Финал и распад</a>
+      </div>
     </section>
 
-    <section id="c2">
-      <h3>Название</h3>
-      <p>Название «The Beatles» — результат творческой игры слов. Леннон и Сатклифф хотели соединить слово <em>beat</em> («ритм») и «beetles» («жуки»), вдохновившись названием группы Бадди Холли <em>The Crickets</em>. Игра слов отражала музыкальную суть коллектива: бит — ритм сердца, символ движения и молодости. С этого момента каждая афиша, где появлялось слово <strong>The Beatles</strong>, становилась олицетворением новой музыкальной волны.</p>
-      <p>Название стало не просто брендом — оно отразило дух поколения, объединённого энергией перемен, протестом против рутины и верой в свободу творчества.</p>
+    <section class="layout">
+
+      <!-- ОСНОВНАЯ КОЛОНКА -->
+      <section class="timeline" aria-label="Хронология">
+
+        <article class="event card" id="c1">
+          <div class="stamp">Конец 1950-х</div>
+          <div>
+            <h3>Начало</h3>
+            <p>
+История The Beatles начинается в послевоенном Ливерпуле — городе портов, рабочих кварталов и новой молодёжной культуры. Именно здесь Джон Леннон собрал школьную группу The Quarrymen, вдохновлённую американским рок-н-роллом, блюзом и скиффлом.
+
+В 1957 году он познакомился с Полом Маккартни — музыкантом с отличным слухом и природным чувством мелодии. Их дуэт быстро стал основой коллектива. Вскоре Пол привёл в группу юного, но технически блестящего гитариста Джорджа Харрисона.
+
+Трое подростков, объединённых любовью к музыке, проводили часы за репетициями, переписывали аккорды с пластинок Элвиса, Чака Берри и Бадди Холли и постепенно создавали собственную манеру игры и вокальных гармоний. Уже тогда формировалась та химия, которая позже станет визитной карточкой The Beatles.
+            </p>
+          </div>
+        </article>
+
+        <article class="event card" id="c2">
+          <div class="stamp">1960</div>
+          <div>
+            <h3>Название</h3>
+            <p>
+В 1960 году группа окончательно закрепилась под именем The Beatles. Название родилось как игра слов: beat («ритм») + beetles («жуки») и одновременно как отсылка к любимой группе Бадди Холли — The Crickets.
+
+Оно оказалось идеальным: простое, музыкальное и запоминающееся, отражающее суть новой эпохи. В этом названии уже чувствовалась энергия движения, молодости и ритма — словно сама группа заранее предчувствовала свою будущую роль в мировой культуре.
+            </p>
+          </div>
+        </article>
+
+        <article class="event card" id="c3">
+          <div class="stamp">1960–1962</div>
+          <div>
+            <h3>Первые гастроли: Гамбург</h3>
+            <p>
+Настоящей школой жизни для музыкантов стали гастроли в немецком Гамбурге. В ночных клубах квартала Санкт-Паули им приходилось играть по шесть–восемь часов в день, часто без выходных, перед шумной и требовательной публикой.
+
+Эти месяцы превратили группу из любительского ансамбля в мощную концертную машину. Музыканты научились держать зал, импровизировать, работать на износ и не бояться сцены. Именно в Гамбурге они обрели жёсткость звучания, сценическую уверенность и настоящую командную сыгранность.
+
+Здесь же сформировался характер группы — дерзкий, энергичный и живой, который вскоре покорит Великобританию.
+            </p>
+          </div>
+        </article>
+
+        <article class="event card" id="c4">
+          <div class="stamp">1962–1963</div>
+          <div>
+            <h3>Первый контракт и взлёт</h3>
+            <p>
+Возвращение в Ливерпуль стало началом новой главы. Менеджер Брайан Эпстайн увидел в группе огромный потенциал и помог создать профессиональный образ: строгие костюмы, единый стиль, дисциплина и продуманная стратегия продвижения.
+
+Знакомство с продюсером Джорджем Мартином стало судьбоносным. Именно он помог превратить сырую энергию группы в студийное искусство. Сингл “Love Me Do” принёс первые успехи, а альбом “Please Please Me” мгновенно вывел группу на вершины британских чартов.
+
+Началась эпоха, позже названная битломанией: толпы поклонников, бесконечные гастроли, телевидение, обложки журналов и мировой успех. The Beatles стали не просто группой, а культурным феноменом.
+            </p>
+          </div>
+        </article>
+
+        <article class="event card" id="c5">
+          <div class="stamp">1968</div>
+          <div>
+            <h3>«Белый альбом»</h3>
+            <p>
+К концу десятилетия The Beatles достигли творческой зрелости и смелости. Альбом “The Beatles”, известный как «Белый альбом», стал самым разнообразным и противоречивым в их карьере.
+
+Здесь соседствуют нежные акустические баллады, жёсткий рок, фольклорные мотивы и экспериментальные композиции. Это был альбом, в котором каждый участник всё ярче проявлял собственный стиль: философский Леннон, мелодичный Маккартни, утончённый Харрисон и всё более самостоятельный Ринго Старр.
+
+Одновременно этот период показал, что группа начинает распадаться на индивидуальные миры — творческое разнообразие сопровождалось внутренним напряжением и разными взглядами на будущее.
+            </p>
+          </div>
+        </article>
+
+        <article class="event card" id="c6">
+          <div class="stamp">1969–1970</div>
+          <div>
+            <h3>Последние альбомы и распад</h3>
+            <p>
+Последние годы существования группы были сложными и эмоционально насыщенными. Разногласия в студии, личные конфликты и разные творческие направления постепенно разрушали прежнее единство.
+
+Тем не менее, The Beatles сумели завершить свою историю на высочайшей ноте. Альбом “Abbey Road” стал одним из самых совершенных в их дискографии, а проект “Let It Be” — документом последних дней группы.
+
+В 1970 году распад был объявлен официально. Каждый участник начал сольную карьеру, но история The Beatles уже стала частью культурного наследия человечества. Их музыка продолжает звучать, вдохновлять новые поколения и оставаться символом эпохи, когда четыре музыканта изменили представление о том, чем может быть популярная музыка.
+            </p>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- САЙДБАР -->
+      <aside class="aside" aria-label="Заметки">
+        <div class="card">
+          <h2>Коротко о “битломании”</h2>
+          <p style="margin:0;color:var(--muted);font-size:14.5px;">
+            Массовая фан-культура в современном смысле во многом “выросла” из феномена The Beatles:
+            концерты превращались в событие уровня города, а группа стала настоящим культурным брендом.
+          </p>
+        </div>
+
+        <blockquote class="card">
+          <p>Их история — это не только про песни, но и про то, как меняется мир вокруг музыки.</p>
+          <footer>Почему тема Beatles не “устаревает”</footer>
+        </blockquote>
+
+        <div class="note">
+          <strong>Дальше по сайту:</strong><br/>
+          • <a href="disc.html">Дискография</a> — альбомы и ключевые релизы<br/>
+          • <a href="film.html">Фильмография</a> — фильмы и проекты<br/>
+          • <a href="info.html">Общая информация</a> — состав и факты
+        </div>
+      </aside>
+
     </section>
 
-    <section id="c3">
-      <h3>Первые гастроли</h3>
-      <p>Путь к успеху начался с поездок в Гамбург. Там молодые британцы играли по восемь часов в сутки в клубах, полных моряков и туристов. Эти выступления закалили их физически и творчески. В Гамбурге The Beatles научились держать сцену, работать с публикой и создавать настоящий рок-н-ролльный драйв.</p>
-      <p>Именно в этот период они стали настоящей группой — с характером, стилем и особой атмосферой. Плотный график, проживание в скромных условиях и постоянное выступление сделали их единым организмом. Леннон позже признавался, что именно в Гамбурге The Beatles «выросли» как музыканты.</p>
-    </section>
+    <footer class="site-footer">
+      © The Beatles — учебный/фан-сайт. Изображения и названия принадлежат их правообладателям.
+    </footer>
 
-    <section id="c4">
-      <h3>Первый контракт</h3>
-      <p>После возвращения в Англию судьба свела их с продюсером Джорджем Мартином — человеком, который превратил амбициозную группу в музыкальный феномен. Подписав контракт со студией <em>EMI</em>, Beatles начали записывать первые синглы. Песня <strong>"Love Me Do"</strong> стала прорывом, а за ней последовал альбом <strong>"Please Please Me"</strong>, поднявший группу на вершину британских чартов.</p>
-      <p>Благодаря Мартину звучание Beatles стало узнаваемым: чистое, энергичное, с богатой вокальной гармонией. Каждый новый релиз сопровождался шквалом восторгов, а концерты собирали тысячи фанатов, кричащих так громко, что музыканты едва слышали себя на сцене. Это был взрыв под названием «битломания».</p>
-    </section>
-
-    <section id="c5">
-      <h3>«Белый альбом»</h3>
-      <p>«Белый альбом» (1968) — это музыкальная энциклопедия, в которой Beatles показали всё, на что способны. Здесь соседствуют баллады и хард-рок, авангард и акустика, безумие и нежность. Он стал отражением внутренней раздвоенности коллектива: каждый участник стремился выразить себя как индивидуальность.</p>
-      <p>Джон создавал философские песни вроде <em>“Revolution”</em>, Пол писал мелодичные произведения вроде <em>“Blackbird”</em>, Джордж открылся с духовной стороны в <em>“While My Guitar Gently Weeps”</em>. Несмотря на конфликты и напряжённость, альбом стал символом свободы творчества и доказательством того, что даже в разногласиях можно родить великое искусство.</p>
-    </section>
-
-    <section id="c6">
-      <h3>Последние альбомы и распад</h3>
-      <p>К концу 1960-х отношения между участниками ухудшились. Разногласия в студии, влияние Йоко Оно, творческая усталость — всё это вело к распаду. Тем не менее, они сумели создать два шедевра — <strong>"Abbey Road"</strong> и <strong>"Let It Be"</strong>. Первый стал торжественным финалом их пути: композиция <em>“Come Together”</em> объединила всю философию Beatles в одной фразе — «вместе, но разные».</p>
-      <p>В 1970 году Маккартни объявил о выходе из группы, и мир замер. Но Beatles не исчезли. Их песни остались в сердцах миллионов, став саундтреком к жизни целых поколений. И сегодня их музыка звучит с той же силой, как и полвека назад — в наушниках, на концертах, в душах людей по всему миру.</p>
-    </section>
-  </div>
+  </main>
 
 </body>
 </html>
+
 
 	  
